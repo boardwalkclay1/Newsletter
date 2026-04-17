@@ -1,0 +1,62 @@
+[
+  {
+    "id": "cascade-adult-sun",
+    "name": "Cascade Sunday Adult Night",
+    "rink": "Cascade Family Skating",
+    "city": "Atlanta",
+    "state": "GA",
+    "type": "adult-night",
+    "recurrence": "weekly",
+    "day": "Sunday",
+    "time": "8:00 PM – 12:00 AM",
+    "url": "https://cascadefun.com"
+  },
+  {
+    "id": "cascade-family-sun",
+    "name": "Cascade Sunday Family Session",
+    "rink": "Cascade Family Skating",
+    "city": "Atlanta",
+    "state": "GA",
+    "type": "family-kids",
+    "recurrence": "weekly",
+    "day": "Sunday",
+    "time": "3:00 PM – 7:00 PM",
+    "url": "https://cascadefun.com"
+  },
+  {
+    "id": "sparkles-4ever-sundayz",
+    "name": "4ever Sundayz Adult Night",
+    "rink": "Sparkles of Smyrna",
+    "city": "Smyrna",
+    "state": "GA",
+    "type": "adult-night",
+    "recurrence": "weekly",
+    "day": "Sunday",
+    "time": "9:00 PM – 1:00 AM",
+    "url": "https://sparklessmyrna.com"
+  },
+  {
+    "id": "stone-mountain-adult",
+    "name": "Stone Mountain Adult Skate",
+    "rink": "Stone Mountain Skates",
+    "city": "Stone Mountain",
+    "state": "GA",
+    "type": "adult-night",
+    "recurrence": "weekly",
+    "day": "Friday",
+    "time": "10:00 PM – 1:00 AM",
+    "url": "https://stonemountainskates.com"
+  },
+  {
+    "id": "atlanta-kids-open",
+    "name": "Atlanta Kids & Family Open Skate",
+    "rink": "Various Atlanta Rinks",
+    "city": "Atlanta",
+    "state": "GA",
+    "type": "family-kids",
+    "recurrence": "weekly",
+    "day": "Saturday",
+    "time": "Afternoon Sessions",
+    "url": ""
+  }
+]
