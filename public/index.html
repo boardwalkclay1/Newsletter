@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Boardwalk Newsletter Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="bw-dashboard">
+    <div class="bw-panel bw-panel-left">
+      <h1>Boardwalk Newsletter</h1>
+
+      <div class="bw-field">
+        <label>Date & Time</label>
+        <input id="dateTime" type="text">
+      </div>
+
+      <div class="bw-field">
+        <label>Title</label>
+        <input id="title" type="text" placeholder="Boardwalk Newsletter – Issue #1">
+      </div>
+
+      <div class="bw-field">
+        <label>Paragraph 1</label>
+        <textarea id="p1"></textarea>
+      </div>
+
+      <div class="bw-field">
+        <label>Paragraph 2</label>
+        <textarea id="p2"></textarea>
+      </div>
+
+      <div id="sectionsContainer"></div>
+      <button id="addSectionBtn" type="button">+ Add Section</button>
+
+      <div class="bw-field">
+        <label>Ending Words / Sign-off</label>
+        <textarea id="ending"></textarea>
+      </div>
+
+      <h2>Links</h2>
+      <div id="linksContainer"></div>
+      <button id="addLinkBtn" type="button">+ Add Link</button>
+
+      <h2>QR Codes</h2>
+      <div id="qrContainer"></div>
+      <button id="addQrBtn" type="button">+ Add QR</button>
+
+      <h2>Video</h2>
+      <div class="bw-field">
+        <label>Video Type</label>
+        <select id="videoType">
+          <option value="none">None</option>
+          <option value="embed">Embed URL</option>
+        </select>
+      </div>
+      <div class="bw-field" id="videoUrlField" style="display:none;">
+        <label>Video URL (YouTube, Vimeo, etc.)</label>
+        <input id="videoUrl" type="text">
+      </div>
+      <div class="bw-field">
+        <label>Video Placement</label>
+        <select id="videoPlacement">
+          <option value="top">Top</option>
+          <option value="bottom">Bottom</option>
+        </select>
+      </div>
+      <div class="bw-field">
+        <label>Video Caption</label>
+        <input id="videoCaption" type="text">
+      </div>
+
+      <h2>Style</h2>
+      <div class="bw-field">
+        <label>Theme</label>
+        <select id="theme">
+          <option value="old-scroll">Old Scroll</option>
+          <option value="clean">Clean</option>
+        </select>
+      </div>
+      <div class="bw-field">
+        <label>Font Style</label>
+        <select id="fontStyle">
+          <option value="old-english">Old English</option>
+          <option value="cursive">Cursive</option>
+        </select>
+      </div>
+      <div class="bw-field">
+        <label>Text Color</label>
+        <input id="textColor" type="color" value="#2b1b0f">
+      </div>
+      <div class="bw-field">
+        <label>Text Background Color</label>
+        <input id="textBgColor" type="color" value="#fdf5e6">
+      </div>
+
+      <div class="bw-field">
+        <label><input id="showLogo" type="checkbox" checked> Show Logo</label>
+      </div>
+      <div class="bw-field">
+        <label><input id="showSignature" type="checkbox" checked> Show Signature</label>
+      </div>
+    </div>
+
+    <div class="bw-panel bw-panel-right">
+      <h2>Preview</h2>
+      <div id="preview" class="boardwalk-newsletter theme-old-scroll font-old-english">
+        <!-- JS fills this -->
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
