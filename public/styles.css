@@ -1,0 +1,228 @@
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #111;
+  color: #eee;
+}
+
+.bw-dashboard {
+  display: flex;
+  min-height: 100vh;
+}
+
+.bw-panel {
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+.bw-panel-left {
+  width: 40%;
+  background: #181818;
+  overflow-y: auto;
+}
+
+.bw-panel-right {
+  width: 60%;
+  background: #202020;
+  overflow-y: auto;
+}
+
+.bw-field {
+  margin-bottom: 0.75rem;
+}
+
+.bw-field label {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+}
+
+input[type="text"],
+textarea,
+select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.4rem;
+  border-radius: 4px;
+  border: 1px solid #444;
+  background: #111;
+  color: #eee;
+}
+
+textarea {
+  min-height: 60px;
+}
+
+button {
+  margin: 0.25rem 0;
+  padding: 0.4rem 0.7rem;
+  border-radius: 4px;
+  border: none;
+  background: #b8860b;
+  color: #111;
+  cursor: pointer;
+}
+
+/* Newsletter */
+
+:root {
+  --bw-heading-font-old: 'UnifrakturMaguntia', 'Old English Text MT', serif;
+  --bw-heading-font-cursive: 'Great Vibes', cursive;
+  --bw-body-font: 'Georgia', 'Times New Roman', serif;
+}
+
+.boardwalk-newsletter {
+  max-width: 800px;
+  margin: 1rem auto 2rem;
+  padding: 3rem 3.5rem;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 0 40px rgba(0,0,0,0.6);
+  color: #2b1b0f;
+}
+
+.theme-old-scroll {
+  background-image: url('assets/bg-old-paper.jpg');
+}
+
+.theme-clean {
+  background-color: #fdfaf5;
+}
+
+.font-old-english .bw-title,
+.font-old-english .bw-section-title {
+  font-family: var(--bw-heading-font-old);
+}
+
+.font-cursive .bw-title,
+.font-cursive .bw-section-title {
+  font-family: var(--bw-heading-font-cursive);
+}
+
+.bw-paragraph {
+  font-family: var(--bw-body-font);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.indent {
+  text-indent: 2em;
+}
+
+.bw-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.bw-logo-date {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bw-logo {
+  height: 48px;
+}
+
+.bw-date-time {
+  font-family: var(--bw-body-font);
+  font-size: 0.9rem;
+}
+
+.bw-ribbon {
+  position: relative;
+  margin: 1.5rem auto 2rem;
+  padding: 0.75rem 2.5rem;
+  background: linear-gradient(90deg, #5a1b1b, #8b2b2b);
+  color: #f9e6b3;
+  text-align: center;
+  font-family: var(--bw-heading-font-old);
+  letter-spacing: 0.08em;
+}
+
+.bw-gold-stamp {
+  position: absolute;
+  right: -25px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff7c2, #c79a2b);
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+
+.bw-body {
+  padding: 1.5rem;
+  background: rgba(253, 245, 230, 0.85);
+}
+
+.bw-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.bw-section-title {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.bw-links ul {
+  padding-left: 1.2rem;
+}
+
+.bw-links a {
+  color: #5a1b1b;
+  text-decoration: underline;
+}
+
+.bw-footer {
+  margin-top: 3rem;
+  position: relative;
+  min-height: 80px;
+}
+
+.bw-signature {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  font-family: 'Great Vibes', cursive;
+  font-size: 2.5rem;
+  opacity: 0.9;
+}
+
+/* Video */
+
+.bw-video {
+  margin: 1.5rem 0;
+}
+
+.bw-video video,
+.bw-video iframe {
+  width: 100%;
+  max-height: 420px;
+  border-radius: 6px;
+}
+
+.medieval-frame {
+  border: 12px solid transparent;
+  padding: 10px;
+  background-image: url('assets/bg-rolled-scroll.jpg');
+  background-size: cover;
+  border-radius: 8px;
+}
+
+.bw-video-caption {
+  margin-top: 0.4rem;
+  font-style: italic;
+  font-family: var(--bw-body-font);
+}
+
+/* Small helpers */
+
+.bw-inline-row {
+  display: flex;
+  gap: 0.5rem;
+}
