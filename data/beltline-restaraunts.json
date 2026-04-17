@@ -1,0 +1,24 @@
+[
+  {
+    "id": "superica-krog",
+    "name": "Superica – Krog Street Market",
+    "lat": 33.75421,
+    "lon": -84.36491,
+    "cuisine": "Tex-Mex",
+    "website": "https://superica.com",
+    "menu": "https://superica.com/menu",
+    "description": "Tex-Mex spot inside Krog Street Market. Great tacos and margaritas after a BeltLine ride.",
+    "segmentId": "eastside-01"
+  },
+  {
+    "id": "ponce-city-food-hall",
+    "name": "Ponce City Market Food Hall",
+    "lat": 33.77255,
+    "lon": -84.36555,
+    "cuisine": "Food Hall / Mixed",
+    "website": "https://poncecitymarket.com",
+    "menu": "",
+    "description": "Massive food hall right off the Eastside Trail with everything from burgers to ramen.",
+    "segmentId": "eastside-02"
+  }
+]
