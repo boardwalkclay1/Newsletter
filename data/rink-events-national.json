@@ -1,0 +1,62 @@
+[
+  {
+    "id": "la-world-on-wheels-adult",
+    "name": "Adult Night at World on Wheels",
+    "rink": "World on Wheels",
+    "city": "Los Angeles",
+    "state": "CA",
+    "type": "adult-night",
+    "recurrence": "weekly",
+    "day": "Sunday",
+    "time": "Evening",
+    "url": "https://worldonwheelsla.com"
+  },
+  {
+    "id": "houston-fun-city",
+    "name": "Houston Adult Skate Jam",
+    "rink": "Fun City Sk8",
+    "city": "Houston",
+    "state": "TX",
+    "type": "adult-night",
+    "recurrence": "weekly",
+    "day": "Saturday",
+    "time": "Late Night",
+    "url": ""
+  },
+  {
+    "id": "chicago-markham",
+    "name": "Chicago Skate Night",
+    "rink": "Markham Roller Rink",
+    "city": "Markham",
+    "state": "IL",
+    "type": "adult-night",
+    "recurrence": "weekly",
+    "day": "Saturday",
+    "time": "Evening",
+    "url": ""
+  },
+  {
+    "id": "detroit-northland",
+    "name": "Detroit Adult Skate",
+    "rink": "Northland Roller Rink",
+    "city": "Detroit",
+    "state": "MI",
+    "type": "adult-night",
+    "recurrence": "weekly",
+    "day": "Sunday",
+    "time": "Evening",
+    "url": ""
+  },
+  {
+    "id": "national-major-jam",
+    "name": "National Skate Jam Series",
+    "rink": "Rotating Cities",
+    "city": "",
+    "state": "",
+    "type": "major-event",
+    "recurrence": "annual",
+    "day": "",
+    "time": "",
+    "url": ""
+  }
+]
