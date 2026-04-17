@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Boardwalk Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/dashboard/dashboard.css">
+</head>
+<body>
+  <header class="bw-header">
+    <h1>Boardwalk Dashboard</h1>
+    <p>Subscribers · Issues · Scraped News · Delivery</p>
+  </header>
+
+  <main class="bw-main">
+    <section class="bw-card">
+      <h2>Overview</h2>
+      <div class="bw-grid">
+        <div class="bw-stat">
+          <span class="label">Subscribers</span>
+          <span id="statSubscribers" class="value">–</span>
+        </div>
+        <div class="bw-stat">
+          <span class="label">Issues</span>
+          <span id="statIssues" class="value">–</span>
+        </div>
+        <div class="bw-stat">
+          <span class="label">Last Delivery</span>
+          <span id="statLastDelivery" class="value small">–</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="bw-card">
+      <h2>Subscribers</h2>
+      <table class="bw-table">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Channels</th>
+            <th>Topics</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody id="subscribersTableBody">
+          <tr><td colspan="5">Loading…</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="bw-card">
+      <h2>Issues</h2>
+      <ul id="issuesList" class="bw-list"></ul>
+    </section>
+
+    <section class="bw-card">
+      <h2>Scraped News</h2>
+      <div class="bw-tabs">
+        <button data-tab="beltline" class="active">BeltLine</button>
+        <button data-tab="local">Local Skating</button>
+        <button data-tab="national">National</button>
+        <button data-tab="global">Global</button>
+      </div>
+      <div id="newsContainer" class="bw-news"></div>
+    </section>
+
+    <section class="bw-card">
+      <h2>Automation (GitHub Actions)</h2>
+      <p>Use the GitHub Actions tab in your repo to manually run:</p>
+      <ul class="bw-list">
+        <li><strong>Scrape Content</strong> – updates news every 2 days.</li>
+        <li><strong>Build Newsletter</strong> – builds issues twice a week.</li>
+        <li><strong>Send Delivery</strong> – sends latest issue to subscribers.</li>
+      </ul>
+      <p class="hint">This dashboard is read-only; control is via GitHub’s Actions UI.</p>
+    </section>
+  </main>
+
+  <footer class="bw-footer">
+    <p>© Boardwalk Clay – Internal Dashboard</p>
+  </footer>
+
+  <script src="/dashboard/dashboard.js" type="module"></script>
+</body>
+</html>
