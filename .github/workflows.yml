@@ -1,0 +1,38 @@
+name: Scrape Content
+
+on:
+  schedule:
+    - cron: "0 6 */2 * *"   # every 2 days at 06:00 UTC
+  workflow_dispatch:        # you can run it manually too
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Scrape BeltLine news
+        run: node scripts/scrape-beltline-news.js
+
+      - name: Scrape local/national/global skate news
+        run: node scripts/scrape-skate-news.js
+
+      - name: Scrape general world news (optional)
+        run: node scripts/scrape-global-news.js
+
+      - name: Commit scraped data
+        run: |
+          git config user.name "boardwalk-bot"
+          git config user.email "bot@example.com"
+          git add data/
+          git commit -m "Update scraped content" || echo "No changes"
+          git push
