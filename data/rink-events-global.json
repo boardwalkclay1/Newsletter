@@ -1,0 +1,38 @@
+[
+  {
+    "id": "london-baysixty6",
+    "name": "London Roller & Skate Night",
+    "rink": "Various London Venues",
+    "city": "London",
+    "country": "UK",
+    "type": "recurring",
+    "recurrence": "monthly",
+    "day": "",
+    "time": "",
+    "url": ""
+  },
+  {
+    "id": "paris-roller-night",
+    "name": "Paris Roller Night",
+    "rink": "City Streets",
+    "city": "Paris",
+    "country": "France",
+    "type": "major-event",
+    "recurrence": "weekly",
+    "day": "Friday",
+    "time": "Night",
+    "url": ""
+  },
+  {
+    "id": "tokyo-skate",
+    "name": "Tokyo Urban Skate Sessions",
+    "rink": "Various Tokyo Spots",
+    "city": "Tokyo",
+    "country": "Japan",
+    "type": "recurring",
+    "recurrence": "monthly",
+    "day": "",
+    "time": "",
+    "url": ""
+  }
+]
