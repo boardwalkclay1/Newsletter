@@ -157,16 +157,11 @@ body {
   overflow: hidden;
 }
 
-/* HEADER */
-.bw-header {
-  margin-bottom: 1rem;
-}
-
-.bw-logo-date {
+/* HEADER ROW (logo left, date right) */
+.bw-header-row {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.25rem;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .bw-logo {
@@ -176,28 +171,28 @@ body {
 }
 
 .bw-date-time {
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: #5b4630;
 }
 
-/* RIBBON */
+/* CENTERED RIBBON */
 .bw-ribbon {
-  margin-top: 0.75rem;
-  margin-bottom: 1.25rem;
-  position: relative;
+  margin: 1rem auto 1.25rem auto;
   display: inline-block;
-  padding: 0.4rem 1.4rem;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.45rem 1.6rem;
+  border-radius: 999px;
   color: #fff;
   font-size: 0.9rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  border-radius: 999px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
 }
 
-.bw-ribbon-text {
-  position: relative;
-  z-index: 1;
+.ribbon-red {
+  background: var(--ribbon-red);
 }
 
 .bw-gold-stamp {
@@ -212,41 +207,6 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
 }
 
-/* RIBBON COLORS */
-.ribbon-red {
-  background: var(--ribbon-red);
-}
-
-.ribbon-gold {
-  background: var(--ribbon-gold);
-  color: #1a1206;
-}
-
-.ribbon-black {
-  background: var(--ribbon-black);
-}
-
-.ribbon-white {
-  background: var(--ribbon-white);
-  color: #1a1206;
-}
-
-.ribbon-blue {
-  background: var(--ribbon-blue);
-}
-
-.ribbon-purple {
-  background: var(--ribbon-purple);
-}
-
-.ribbon-red-gold {
-  background: linear-gradient(90deg, #b30000, #d4af37);
-}
-
-.ribbon-black-gold {
-  background: linear-gradient(90deg, #000000, #d4af37);
-}
-
 /* BODY */
 .bw-body {
   padding: 1.25rem 1.5rem;
@@ -257,9 +217,10 @@ body {
 }
 
 .bw-title {
+  text-align: center;
   margin-top: 0;
   margin-bottom: 0.75rem;
-  font-size: 1.6rem;
+  font-size: 1.7rem;
 }
 
 .bw-paragraph {
