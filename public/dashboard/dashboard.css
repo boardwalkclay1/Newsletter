@@ -157,8 +157,6 @@ body {
   overflow: hidden;
 }
 
-/* PAPER BACKGROUNDS (applied via inline style) */
-
 /* HEADER */
 .bw-header {
   margin-bottom: 1rem;
@@ -214,7 +212,7 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
 }
 
-/* RIBBON STYLES */
+/* RIBBON COLORS */
 .ribbon-red {
   background: var(--ribbon-red);
 }
