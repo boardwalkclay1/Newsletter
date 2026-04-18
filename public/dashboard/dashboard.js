@@ -16,13 +16,53 @@ const state = {
     caption: ""
   },
   fontFamily: "Great Vibes",
-  paperStyle: "parchment1",
+  paperStyle: "",
   textColor: "#2b1b0f",
   textBgColor: "#fdf5e6",
   showLogo: true,
   showSignature: true,
   ribbonStyle: "red"
 };
+
+// ===============================
+// PAPER + FONT OPTIONS
+// ===============================
+const PAPER_STYLES = {
+  "": "",
+  "Parchment 1": "https://i.imgur.com/8pQJY8G.jpeg",
+  "Parchment 2": "https://i.imgur.com/0m3Yw8k.jpeg",
+  "Parchment 3": "https://i.imgur.com/1YQk0qG.jpeg",
+  "Old Book Page": "https://i.imgur.com/8m1uQ0T.jpeg",
+  "Cream Texture": "https://i.imgur.com/4z0tq1N.jpeg",
+  "Antique Rough": "https://i.imgur.com/7Yp8m4x.jpeg",
+  "Warm Tan": "https://i.imgur.com/2uX8p9F.jpeg",
+  "Ivory Smooth": "https://i.imgur.com/3Qe1t8K.jpeg",
+  "Burnt Edge": "https://i.imgur.com/5rY8k2S.jpeg",
+  "Handmade Fiber": "https://i.imgur.com/9cW8t1L.jpeg"
+};
+
+const FONT_STYLES = [
+  "Great Vibes",
+  "Playfair Display",
+  "Cormorant Garamond",
+  "Lora",
+  "Merriweather",
+  "Dancing Script",
+  "Cinzel",
+  "Marcellus SC",
+  "Uncial Antiqua",
+  "Lobster",
+  "Inter",
+  "Montserrat",
+  "Poppins",
+  "Roboto Slab",
+  "Crimson Text",
+  "Spectral",
+  "Alegreya",
+  "Old Standard TT",
+  "Tangerine",
+  "Arizonia"
+];
 
 // ===============================
 // ELEMENT REFERENCES
@@ -38,7 +78,30 @@ const previewVideo = document.getElementById("previewVideo");
 const previewSignature = document.getElementById("previewSignature");
 const previewLogo = document.getElementById("previewLogo");
 const previewBody = document.getElementById("previewBody");
-const previewRibbon = document.getElementById("previewRibbon");
+
+// ===============================
+// BUILD PAPER + FONT SELECTORS
+// ===============================
+function buildSelectors() {
+  const paperSelect = document.getElementById("paperStyle");
+  const fontSelect = document.getElementById("fontFamily");
+
+  // Paper styles
+  Object.entries(PAPER_STYLES).forEach(([label, url]) => {
+    const opt = document.createElement("option");
+    opt.value = url;
+    opt.textContent = label || "Clean / None";
+    paperSelect.appendChild(opt);
+  });
+
+  // Fonts
+  FONT_STYLES.forEach(font => {
+    const opt = document.createElement("option");
+    opt.value = font;
+    opt.textContent = font;
+    fontSelect.appendChild(opt);
+  });
+}
 
 // ===============================
 // BASIC FIELD BINDINGS
@@ -73,17 +136,19 @@ function bindBasicFields() {
     renderPreview();
   });
 
-  // Style
-  document.getElementById("fontFamily").addEventListener("change", (e) => {
-    state.fontFamily = e.target.value;
-    renderPreview();
-  });
-
+  // Paper style
   document.getElementById("paperStyle").addEventListener("change", (e) => {
     state.paperStyle = e.target.value;
     renderPreview();
   });
 
+  // Font style
+  document.getElementById("fontFamily").addEventListener("change", (e) => {
+    state.fontFamily = e.target.value;
+    renderPreview();
+  });
+
+  // Colors
   document.getElementById("textColor").addEventListener("input", (e) => {
     state.textColor = e.target.value;
     renderPreview();
@@ -94,6 +159,7 @@ function bindBasicFields() {
     renderPreview();
   });
 
+  // Toggles
   document.getElementById("showLogo").addEventListener("change", (e) => {
     state.showLogo = e.target.checked;
     renderPreview();
@@ -141,107 +207,10 @@ function bindBasicFields() {
   });
 
   // Publish button
-  const publishBtn = document.getElementById("publishBtn");
-  publishBtn.addEventListener("click", () => {
+  document.getElementById("publishBtn").addEventListener("click", () => {
     triggerAction("build_newsletter", { newsletter: state });
   });
 }
-
-// ===============================
-// ADD SECTION
-// ===============================
-function addSection() {
-  const index = state.sections.length;
-  state.sections.push({ title: "", body: "" });
-
-  const wrapper = document.createElement("div");
-  wrapper.className = "field";
-  wrapper.innerHTML = `
-    <label>Section ${index + 1} Title</label>
-    <input type="text" data-section-title="${index}">
-    <label>Section ${index + 1} Body</label>
-    <textarea data-section-body="${index}"></textarea>
-  `;
-  sectionsContainer.appendChild(wrapper);
-
-  wrapper.querySelector(`[data-section-title="${index}"]`)
-    .addEventListener("input", (e) => {
-      state.sections[index].title = e.target.value;
-      renderPreview();
-    });
-
-  wrapper.querySelector(`[data-section-body="${index}"]`)
-    .addEventListener("input", (e) => {
-      state.sections[index].body = e.target.value;
-      renderPreview();
-    });
-}
-
-document.getElementById("addSectionBtn").addEventListener("click", addSection);
-
-// ===============================
-// ADD LINK
-// ===============================
-function addLink() {
-  const index = state.links.length;
-  state.links.push({ label: "", url: "" });
-
-  const row = document.createElement("div");
-  row.className = "field";
-  row.innerHTML = `
-    <div class="bw-inline-row">
-      <input type="text" placeholder="Label" data-link-label="${index}">
-      <input type="text" placeholder="URL" data-link-url="${index}">
-    </div>
-  `;
-  linksContainer.appendChild(row);
-
-  row.querySelector(`[data-link-label="${index}"]`)
-    .addEventListener("input", (e) => {
-      state.links[index].label = e.target.value;
-      renderPreview();
-    });
-
-  row.querySelector(`[data-link-url="${index}"]`)
-    .addEventListener("input", (e) => {
-      state.links[index].url = e.target.value;
-      renderPreview();
-    });
-}
-
-document.getElementById("addLinkBtn").addEventListener("click", addLink);
-
-// ===============================
-// ADD QR
-// ===============================
-function addQr() {
-  const index = state.qrCodes.length;
-  state.qrCodes.push({ label: "", url: "" });
-
-  const row = document.createElement("div");
-  row.className = "field";
-  row.innerHTML = `
-    <div class="bw-inline-row">
-      <input type="text" placeholder="QR Label" data-qr-label="${index}">
-      <input type="text" placeholder="QR URL" data-qr-url="${index}">
-    </div>
-  `;
-  qrContainer.appendChild(row);
-
-  row.querySelector(`[data-qr-label="${index}"]`)
-    .addEventListener("input", (e) => {
-      state.qrCodes[index].label = e.target.value;
-      renderPreview();
-    });
-
-  row.querySelector(`[data-qr-url="${index}"]`)
-    .addEventListener("input", (e) => {
-      state.qrCodes[index].url = e.target.value;
-      renderPreview();
-    });
-}
-
-document.getElementById("addQrBtn").addEventListener("click", addQr);
 
 // ===============================
 // ESCAPE HTML
@@ -293,14 +262,10 @@ function buildVideoHtml() {
 // PAPER BACKGROUND
 // ===============================
 function getPaperBackground() {
-  switch (state.paperStyle) {
-    case "parchment1": return "url('/assets/paper/parchment1.jpg')";
-    case "parchment2": return "url('/assets/paper/parchment2.jpg')";
-    case "parchment3": return "url('/assets/paper/parchment3.jpg')";
-    case "clean":
-    default:
-      return state.textBgColor;
+  if (!state.paperStyle) {
+    return state.textBgColor;
   }
+  return `url('${state.paperStyle}')`;
 }
 
 // ===============================
@@ -381,7 +346,7 @@ function renderPreview() {
 }
 
 // ===============================
-// PUBLISH ACTION (CLOUDFLARE PAGES FUNCTION)
+// PUBLISH ACTION (CLOUDFLARE FUNCTION)
 // ===============================
 async function triggerAction(action, payload = {}) {
   await fetch("/api/dispatch", {
@@ -396,5 +361,6 @@ async function triggerAction(action, payload = {}) {
 // ===============================
 // INIT
 // ===============================
+buildSelectors();
 bindBasicFields();
 renderPreview();
