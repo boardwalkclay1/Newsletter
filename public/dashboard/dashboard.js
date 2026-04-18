@@ -10,7 +10,7 @@ const state = {
   links: [],
   qrCodes: [],
   video: {
-    type: "none", // none | embed | upload
+    type: "none",
     url: "",
     placement: "top",
     caption: ""
@@ -21,16 +21,24 @@ const state = {
   textBgColor: "#fdf5e6",
   showLogo: true,
   showSignature: true,
-  ribbonStyle: "red" // fixed default
+  ribbonStyle: "red"
 };
 
 // ===============================
-// ELEMENTS
+// ELEMENT REFERENCES
 // ===============================
-const previewEl = document.getElementById("preview");
-const sectionsContainer = document.getElementById("sectionsContainer");
-const linksContainer = document.getElementById("linksContainer");
-const qrContainer = document.getElementById("qrContainer");
+const previewDateTime = document.getElementById("previewDateTime");
+const previewTitle = document.getElementById("previewTitle");
+const previewParagraphs = document.getElementById("previewParagraphs");
+const previewSections = document.getElementById("previewSections");
+const previewLinks = document.getElementById("previewLinks");
+const previewQRCodes = document.getElementById("previewQRCodes");
+const previewEnding = document.getElementById("previewEnding");
+const previewVideo = document.getElementById("previewVideo");
+const previewSignature = document.getElementById("previewSignature");
+const previewLogo = document.getElementById("previewLogo");
+const previewBody = document.getElementById("previewBody");
+const previewRibbon = document.getElementById("previewRibbon");
 
 // ===============================
 // BASIC FIELD BINDINGS
@@ -132,21 +140,15 @@ function bindBasicFields() {
     renderPreview();
   });
 
-  // ===============================
-  // UPDATED PUBLISH BUTTON
-  // ===============================
+  // Publish button
   const publishBtn = document.getElementById("publishBtn");
-  if (publishBtn) {
-    publishBtn.addEventListener("click", () => {
-      triggerAction("build_newsletter", {
-        newsletter: state
-      });
-    });
-  }
+  publishBtn.addEventListener("click", () => {
+    triggerAction("build_newsletter", { newsletter: state });
+  });
 }
 
 // ===============================
-// SECTIONS
+// ADD SECTION
 // ===============================
 function addSection() {
   const index = state.sections.length;
@@ -162,15 +164,13 @@ function addSection() {
   `;
   sectionsContainer.appendChild(wrapper);
 
-  wrapper
-    .querySelector(`[data-section-title="${index}"]`)
+  wrapper.querySelector(`[data-section-title="${index}"]`)
     .addEventListener("input", (e) => {
       state.sections[index].title = e.target.value;
       renderPreview();
     });
 
-  wrapper
-    .querySelector(`[data-section-body="${index}"]`)
+  wrapper.querySelector(`[data-section-body="${index}"]`)
     .addEventListener("input", (e) => {
       state.sections[index].body = e.target.value;
       renderPreview();
@@ -180,7 +180,7 @@ function addSection() {
 document.getElementById("addSectionBtn").addEventListener("click", addSection);
 
 // ===============================
-// LINKS
+// ADD LINK
 // ===============================
 function addLink() {
   const index = state.links.length;
@@ -196,15 +196,13 @@ function addLink() {
   `;
   linksContainer.appendChild(row);
 
-  row
-    .querySelector(`[data-link-label="${index}"]`)
+  row.querySelector(`[data-link-label="${index}"]`)
     .addEventListener("input", (e) => {
       state.links[index].label = e.target.value;
       renderPreview();
     });
 
-  row
-    .querySelector(`[data-link-url="${index}"]`)
+  row.querySelector(`[data-link-url="${index}"]`)
     .addEventListener("input", (e) => {
       state.links[index].url = e.target.value;
       renderPreview();
@@ -214,7 +212,7 @@ function addLink() {
 document.getElementById("addLinkBtn").addEventListener("click", addLink);
 
 // ===============================
-// QR CODES
+// ADD QR
 // ===============================
 function addQr() {
   const index = state.qrCodes.length;
@@ -230,15 +228,13 @@ function addQr() {
   `;
   qrContainer.appendChild(row);
 
-  row
-    .querySelector(`[data-qr-label="${index}"]`)
+  row.querySelector(`[data-qr-label="${index}"]`)
     .addEventListener("input", (e) => {
       state.qrCodes[index].label = e.target.value;
       renderPreview();
     });
 
-  row
-    .querySelector(`[data-qr-url="${index}"]`)
+  row.querySelector(`[data-qr-url="${index}"]`)
     .addEventListener("input", (e) => {
       state.qrCodes[index].url = e.target.value;
       renderPreview();
@@ -274,11 +270,7 @@ function buildVideoHtml() {
     return `
       <div class="bw-video">
         <iframe src="${escapeHtml(src)}" allowfullscreen></iframe>
-        ${
-          state.video.caption
-            ? `<div class="bw-video-caption">${escapeHtml(state.video.caption)}</div>`
-            : ""
-        }
+        ${state.video.caption ? `<div class="bw-video-caption">${escapeHtml(state.video.caption)}</div>` : ""}
       </div>
     `;
   }
@@ -289,11 +281,7 @@ function buildVideoHtml() {
         <video controls>
           <source src="${escapeHtml(state.video.url)}" type="video/mp4">
         </video>
-        ${
-          state.video.caption
-            ? `<div class="bw-video-caption">${escapeHtml(state.video.caption)}</div>`
-            : ""
-        }
+        ${state.video.caption ? `<div class="bw-video-caption">${escapeHtml(state.video.caption)}</div>` : ""}
       </div>
     `;
   }
@@ -302,23 +290,13 @@ function buildVideoHtml() {
 }
 
 // ===============================
-// RIBBON CLASS (fixed red default)
-// ===============================
-function getRibbonClass() {
-  return "ribbon-red";
-}
-
-// ===============================
 // PAPER BACKGROUND
 // ===============================
 function getPaperBackground() {
   switch (state.paperStyle) {
-    case "parchment1":
-      return "url('/assets/paper/parchment1.jpg')";
-    case "parchment2":
-      return "url('/assets/paper/parchment2.jpg')";
-    case "parchment3":
-      return "url('/assets/paper/parchment3.jpg')";
+    case "parchment1": return "url('/assets/paper/parchment1.jpg')";
+    case "parchment2": return "url('/assets/paper/parchment2.jpg')";
+    case "parchment3": return "url('/assets/paper/parchment3.jpg')";
     case "clean":
     default:
       return state.textBgColor;
@@ -329,16 +307,26 @@ function getPaperBackground() {
 // RENDER PREVIEW
 // ===============================
 function renderPreview() {
-  const fontFamilyStyle = `font-family: '${state.fontFamily}', serif;`;
-  const paperBg = getPaperBackground();
-  const ribbonClass = getRibbonClass();
+  // Header
+  previewDateTime.textContent = state.dateTime;
+  previewLogo.style.display = state.showLogo ? "block" : "none";
 
-  const paragraphsHtml = state.paragraphs
+  // Title
+  previewTitle.textContent = state.title || "Boardwalk Newsletter";
+
+  // Body background + font
+  previewBody.style.background = getPaperBackground();
+  previewBody.style.color = state.textColor;
+  previewBody.style.fontFamily = `'${state.fontFamily}', serif`;
+
+  // Paragraphs
+  previewParagraphs.innerHTML = state.paragraphs
     .filter((p) => p.trim())
     .map((p) => `<p class="bw-paragraph indent">${escapeHtml(p)}</p>`)
     .join("");
 
-  const sectionsHtml = state.sections
+  // Sections
+  previewSections.innerHTML = state.sections
     .filter((s) => s.title || s.body)
     .map(
       (s) => `
@@ -350,7 +338,8 @@ function renderPreview() {
     )
     .join("");
 
-  const linksHtml = state.links.length
+  // Links
+  previewLinks.innerHTML = state.links.length
     ? `
       <section class="bw-links">
         <h3 class="bw-section-title">Links & Portals</h3>
@@ -369,7 +358,8 @@ function renderPreview() {
     `
     : "";
 
-  const qrHtml = state.qrCodes.length
+  // QR Codes
+  previewQRCodes.innerHTML = state.qrCodes.length
     ? `
       <section class="bw-links">
         <h3 class="bw-section-title">QR Codes</h3>
@@ -386,61 +376,22 @@ function renderPreview() {
     `
     : "";
 
-  const videoHtml = buildVideoHtml();
+  // Ending
+  previewEnding.innerHTML = state.ending
+    ? `<section class="bw-signoff"><p class="bw-paragraph indent">${escapeHtml(
+        state.ending
+      )}</p></section>`
+    : "";
 
-  let bodyInner = `
-    <h1 class="bw-title">${escapeHtml(state.title || "Boardwalk Newsletter")}</h1>
-    ${paragraphsHtml}
-    ${sectionsHtml}
-    ${linksHtml}
-    ${qrHtml}
-    <section class="bw-signoff">
-      <p class="bw-paragraph indent">${escapeHtml(state.ending)}</p>
-    </section>
-  `;
+  // Video
+  previewVideo.innerHTML = buildVideoHtml();
 
-  if (videoHtml) {
-    bodyInner =
-      state.video.placement === "top"
-        ? videoHtml + bodyInner
-        : bodyInner + videoHtml;
-  }
-
-  previewEl.setAttribute("style", fontFamilyStyle);
-
-  previewEl.innerHTML = `
-    <header class="bw-header">
-      <div class="bw-logo-date">
-        ${
-          state.showLogo
-            ? '<img src="assets/logo-boardwalk.png" class="bw-logo" alt="Boardwalk Newsletter Logo">'
-            : ""
-        }
-        <div class="bw-date-time">${escapeHtml(state.dateTime)}</div>
-      </div>
-
-      <div class="bw-ribbon ${ribbonClass}">
-        <span class="bw-ribbon-text">Boardwalk Newsletter</span>
-        <span class="bw-gold-stamp"></span>
-      </div>
-    </header>
-
-    <main class="bw-body" style="background:${paperBg}; color:${state.textColor}; ${fontFamilyStyle}">
-      ${bodyInner}
-    </main>
-
-    <footer class="bw-footer">
-      ${
-        state.showSignature
-          ? '<div class="bw-signature">Boardwalk Clay</div>'
-          : ""
-      }
-    </footer>
-  `;
+  // Signature
+  previewSignature.style.display = state.showSignature ? "block" : "none";
 }
 
 // ===============================
-// REPO DISPATCH TRIGGER (PUBLISH)
+// PUBLISH ACTION
 // ===============================
 async function triggerAction(action, payload = {}) {
   const token = localStorage.getItem("gh_token");
@@ -449,10 +400,7 @@ async function triggerAction(action, payload = {}) {
     return;
   }
 
-  const owner = "boardwlkclay1";
-  const repo = "Newsletter";
-
-  await fetch(`https://api.github.com/repos/${owner}/${repo}/dispatches`, {
+  await fetch(`https://api.github.com/repos/boardwlkclay1/Newsletter/dispatches`, {
     method: "POST",
     headers: {
       Accept: "application/vnd.github+json",
