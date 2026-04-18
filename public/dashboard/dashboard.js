@@ -132,11 +132,15 @@ function bindBasicFields() {
     renderPreview();
   });
 
-  // Publish button
+  // ===============================
+  // UPDATED PUBLISH BUTTON
+  // ===============================
   const publishBtn = document.getElementById("publishBtn");
   if (publishBtn) {
     publishBtn.addEventListener("click", () => {
-      triggerAction("build_newsletter");
+      triggerAction("build_newsletter", {
+        newsletter: state
+      });
     });
   }
 }
@@ -272,9 +276,7 @@ function buildVideoHtml() {
         <iframe src="${escapeHtml(src)}" allowfullscreen></iframe>
         ${
           state.video.caption
-            ? `<div class="bw-video-caption">${escapeHtml(
-                state.video.caption
-              )}</div>`
+            ? `<div class="bw-video-caption">${escapeHtml(state.video.caption)}</div>`
             : ""
         }
       </div>
@@ -289,9 +291,7 @@ function buildVideoHtml() {
         </video>
         ${
           state.video.caption
-            ? `<div class="bw-video-caption">${escapeHtml(
-                state.video.caption
-              )}</div>`
+            ? `<div class="bw-video-caption">${escapeHtml(state.video.caption)}</div>`
             : ""
         }
       </div>
@@ -335,10 +335,7 @@ function renderPreview() {
 
   const paragraphsHtml = state.paragraphs
     .filter((p) => p.trim())
-    .map(
-      (p) =>
-        `<p class="bw-paragraph indent">${escapeHtml(p)}</p>`
-    )
+    .map((p) => `<p class="bw-paragraph indent">${escapeHtml(p)}</p>`)
     .join("");
 
   const sectionsHtml = state.sections
@@ -362,9 +359,7 @@ function renderPreview() {
             .filter((l) => l.url)
             .map(
               (l) =>
-                `<li><a href="${escapeHtml(
-                  l.url
-                )}" target="_blank">${escapeHtml(
+                `<li><a href="${escapeHtml(l.url)}" target="_blank">${escapeHtml(
                   l.label || l.url
                 )}</a></li>`
             )
@@ -383,9 +378,7 @@ function renderPreview() {
             .filter((q) => q.url)
             .map(
               (q) =>
-                `<li>${escapeHtml(q.label || "")} – ${escapeHtml(
-                  q.url
-                )}</li>`
+                `<li>${escapeHtml(q.label || "")} – ${escapeHtml(q.url)}</li>`
             )
             .join("")}
         </ul>
@@ -396,9 +389,7 @@ function renderPreview() {
   const videoHtml = buildVideoHtml();
 
   let bodyInner = `
-    <h1 class="bw-title">${escapeHtml(
-      state.title || "Boardwalk Newsletter"
-    )}</h1>
+    <h1 class="bw-title">${escapeHtml(state.title || "Boardwalk Newsletter")}</h1>
     ${paragraphsHtml}
     ${sectionsHtml}
     ${linksHtml}
