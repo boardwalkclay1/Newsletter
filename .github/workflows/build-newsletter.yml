@@ -2,34 +2,29 @@ name: Build Newsletter
 
 on:
   schedule:
-    # Thursday daytime (e.g. 16:00 UTC)
-    - cron: "0 16 * * 4"
-    # 4 days later (Monday same time)
-    - cron: "0 16 * * 1"
-  workflow_dispatch:   # manual button in GitHub UI
+    - cron: "0 16 * * 4"  # Thursday
+    - cron: "0 16 * * 1"  # Monday
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "20"
-
-      - name: Install deps
-        run: npm ci
-
+      - run: npm ci
       - name: Build newsletter
         run: node scripts/build-newsletter.js
-
-      - name: Commit issue
+      - name: Generate issue index
+        run: node scripts/generate-issue-index.js
+      - name: Register delivery job
+        run: node scripts/register-delivery-job.js
+      - name: Commit issues and index
         run: |
           git config user.name "boardwalk-bot"
           git config user.email "bot@example.com"
-          git add public/issues/
+          git add public/issues/ data/issues/index.json data/delivery/
           git commit -m "Add newsletter issue" || echo "No changes"
           git push
