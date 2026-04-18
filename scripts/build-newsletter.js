@@ -7,7 +7,6 @@ import { loadJson } from '../backend/lib/loadJson.js';
 
 async function main() {
   const dashboardJsonPath = 'data/dashboard-newsletter.json';
-
   let state;
 
   // ============================================================
@@ -17,7 +16,6 @@ async function main() {
     try {
       const raw = fs.readFileSync(dashboardJsonPath, 'utf8');
       state = JSON.parse(raw);
-
       console.log('Using dashboard newsletter JSON');
     } catch (err) {
       console.error('Failed to parse dashboard JSON, falling back:', err);
@@ -25,9 +23,9 @@ async function main() {
     }
   } else {
     // ============================================================
-    // 2. FALLBACK: AUTO‑BUILD NEWSLETTER (old behavior)
+    // 2. FALLBACK: AUTO‑BUILD NEWSLETTER
     // ============================================================
-    console.log('No dashboard JSON found — using auto‑build');
+    console.log('No dashboard JSON found — using auto-build');
     state = await buildNewsletterData({});
   }
 
@@ -37,10 +35,10 @@ async function main() {
   const html = renderNewsletter(state);
 
   // ============================================================
-  // 4. ISSUE ID (timestamp‑based)
+  // 4. ISSUE ID
   // ============================================================
   const now = new Date();
-  const id = now.getTime(); // unique numeric ID
+  const id = now.getTime();
 
   // ============================================================
   // 5. WRITE HTML FILE
@@ -63,7 +61,8 @@ async function main() {
     id,
     title: state.title || `Boardwalk Newsletter – ${id}`,
     summary: state.summary || '',
-    createdAt: now.toISOString()
+    createdAt: now.toISOString(),
+    path: `/issues/issue-${id}.html`
   };
 
   const updatedIndex = [...index, meta];
@@ -72,7 +71,7 @@ async function main() {
   console.log('Updated issue index');
 
   // ============================================================
-  // 7. CLEAN UP DASHBOARD JSON (optional)
+  // 7. CLEAN UP DASHBOARD JSON
   // ============================================================
   try {
     if (fs.existsSync(dashboardJsonPath)) {
