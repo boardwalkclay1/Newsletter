@@ -1,3 +1,6 @@
+// ===============================
+// PATHS TO DATA FILES
+// ===============================
 const paths = {
   subscribers: '/data/subscribers.json',
   issuesIndex: '/data/issues/index.json',
@@ -8,16 +11,23 @@ const paths = {
   deliveryLogs: '/data/delivery/logs.json'
 };
 
+// ===============================
+// LOAD JSON FROM REPO
+// ===============================
 async function loadJson(path) {
   try {
     const res = await fetch(path, { cache: 'no-store' });
     if (!res.ok) throw new Error(path + ' not found');
     return await res.json();
-  } catch {
+  } catch (err) {
+    console.warn('Failed to load', path, err);
     return null;
   }
 }
 
+// ===============================
+// RENDER SUBSCRIBERS
+// ===============================
 function renderSubscribers(subscribers) {
   const tbody = document.getElementById('subscribersTableBody');
   if (!subscribers || !subscribers.length) {
@@ -55,6 +65,9 @@ function renderSubscribers(subscribers) {
     .join('');
 }
 
+// ===============================
+// RENDER ISSUES
+// ===============================
 function renderIssues(issues) {
   const list = document.getElementById('issuesList');
   if (!issues || !issues.length) {
@@ -74,6 +87,9 @@ function renderIssues(issues) {
     .join('');
 }
 
+// ===============================
+// RENDER DELIVERY LOGS
+// ===============================
 function renderDeliveryLogs(logs) {
   const stat = document.getElementById('statLastDelivery');
   if (!logs || !logs.length) {
@@ -84,6 +100,9 @@ function renderDeliveryLogs(logs) {
   stat.textContent = `${last.issueId} @ ${last.sentAt}`;
 }
 
+// ===============================
+// RENDER NEWS TABS
+// ===============================
 function renderNewsTab(tab, items) {
   const container = document.getElementById('newsContainer');
   if (!items || !items.length) {
@@ -104,6 +123,9 @@ function renderNewsTab(tab, items) {
     .join('');
 }
 
+// ===============================
+// SETUP NEWS TABS
+// ===============================
 async function setupNewsTabs() {
   const [beltline, local, national, global] = await Promise.all([
     loadJson(paths.beltlineNews),
@@ -120,16 +142,60 @@ async function setupNewsTabs() {
       buttons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       const tab = btn.dataset.tab;
-      if (tab === 'beltline') renderNewsTab('beltline', state.beltline || []);
-      if (tab === 'local') renderNewsTab('local', state.local || []);
-      if (tab === 'national') renderNewsTab('national', state.national || []);
-      if (tab === 'global') renderNewsTab('global', state.global || []);
+      renderNewsTab(tab, state[tab] || []);
     });
   });
 
   renderNewsTab('beltline', state.beltline || []);
 }
 
+// ===============================
+// REPO DISPATCH TRIGGER
+// ===============================
+async function triggerAction(action, payload = {}) {
+  const token = localStorage.getItem('gh_token');
+  if (!token) {
+    alert('Missing GitHub token. Add it in dashboard settings.');
+    return;
+  }
+
+  const owner = '<YOUR_GITHUB_USERNAME>';
+  const repo = '<YOUR_REPO_NAME>';
+
+  await fetch(`https://api.github.com/repos/${owner}/${repo}/dispatches`, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/vnd.github+json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      event_type: action,
+      client_payload: payload
+    })
+  });
+
+  alert(`Triggered: ${action}`);
+}
+
+// ===============================
+// BUTTON HOOKS
+// ===============================
+window.scrapeNow = () => triggerAction('scrape_content');
+window.buildNow = () => triggerAction('build_newsletter');
+window.sendNow = () => triggerAction('send_delivery');
+
+// ===============================
+// ADD SUBSCRIBER (Dashboard Admin)
+// ===============================
+window.addSubscriber = async function (subscriber) {
+  await triggerAction('add_subscriber', {
+    subscriber: JSON.stringify(subscriber)
+  });
+};
+
+// ===============================
+// INIT DASHBOARD
+// ===============================
 async function init() {
   const [subs, issues, logs] = await Promise.all([
     loadJson(paths.subscribers),
