@@ -9,10 +9,14 @@
 <body>
   <header class="bw-header">
     <h1>Boardwalk Dashboard</h1>
-    <p>Subscribers · Issues · Scraped News · Delivery</p>
+    <p>Subscribers · Issues · Scraped News · Delivery · Automation</p>
   </header>
 
   <main class="bw-main">
+
+    <!-- ========================= -->
+    <!-- OVERVIEW -->
+    <!-- ========================= -->
     <section class="bw-card">
       <h2>Overview</h2>
       <div class="bw-grid">
@@ -31,6 +35,48 @@
       </div>
     </section>
 
+    <!-- ========================= -->
+    <!-- AUTOMATION CONTROLS -->
+    <!-- ========================= -->
+    <section class="bw-card">
+      <h2>Automation Controls</h2>
+
+      <div class="bw-grid">
+        <button class="bw-btn" onclick="scrapeNow()">Scrape Now</button>
+        <button class="bw-btn" onclick="buildNow()">Build Newsletter</button>
+        <button class="bw-btn" onclick="sendNow()">Send Delivery</button>
+      </div>
+
+      <p class="hint">
+        These buttons trigger GitHub Actions via <strong>repo_dispatch</strong>.
+      </p>
+    </section>
+
+    <!-- ========================= -->
+    <!-- GITHUB TOKEN SETTINGS -->
+    <!-- ========================= -->
+    <section class="bw-card">
+      <h2>GitHub Token</h2>
+
+      <label>
+        <span class="label">Personal Access Token (PAT)</span>
+        <input id="ghTokenInput" type="password" placeholder="ghp_..." />
+      </label>
+
+      <div class="bw-grid">
+        <button class="bw-btn" onclick="saveToken()">Save Token</button>
+        <button class="bw-btn" onclick="clearToken()">Clear Token</button>
+      </div>
+
+      <p class="hint">
+        Token is stored locally in your browser.  
+        Required for triggering repo_dispatch events.
+      </p>
+    </section>
+
+    <!-- ========================= -->
+    <!-- SUBSCRIBERS -->
+    <!-- ========================= -->
     <section class="bw-card">
       <h2>Subscribers</h2>
       <table class="bw-table">
@@ -49,32 +95,30 @@
       </table>
     </section>
 
+    <!-- ========================= -->
+    <!-- ISSUES -->
+    <!-- ========================= -->
     <section class="bw-card">
       <h2>Issues</h2>
       <ul id="issuesList" class="bw-list"></ul>
     </section>
 
+    <!-- ========================= -->
+    <!-- SCRAPED NEWS -->
+    <!-- ========================= -->
     <section class="bw-card">
       <h2>Scraped News</h2>
+
       <div class="bw-tabs">
         <button data-tab="beltline" class="active">BeltLine</button>
         <button data-tab="local">Local Skating</button>
         <button data-tab="national">National</button>
         <button data-tab="global">Global</button>
       </div>
+
       <div id="newsContainer" class="bw-news"></div>
     </section>
 
-    <section class="bw-card">
-      <h2>Automation (GitHub Actions)</h2>
-      <p>Use the GitHub Actions tab in your repo to manually run:</p>
-      <ul class="bw-list">
-        <li><strong>Scrape Content</strong> – updates news every 2 days.</li>
-        <li><strong>Build Newsletter</strong> – builds issues twice a week.</li>
-        <li><strong>Send Delivery</strong> – sends latest issue to subscribers.</li>
-      </ul>
-      <p class="hint">This dashboard is read-only; control is via GitHub’s Actions UI.</p>
-    </section>
   </main>
 
   <footer class="bw-footer">
@@ -82,5 +126,21 @@
   </footer>
 
   <script src="/dashboard/dashboard.js" type="module"></script>
+
+  <script>
+    // Token save/clear helpers
+    function saveToken() {
+      const val = document.getElementById('ghTokenInput').value.trim();
+      if (!val) return alert('Enter a token first');
+      localStorage.setItem('gh_token', val);
+      alert('Token saved');
+    }
+
+    function clearToken() {
+      localStorage.removeItem('gh_token');
+      alert('Token cleared');
+    }
+  </script>
+
 </body>
 </html>
