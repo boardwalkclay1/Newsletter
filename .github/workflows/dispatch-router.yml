@@ -1,0 +1,48 @@
+name: Dashboard Dispatch Router
+
+on:
+  repository_dispatch:
+
+jobs:
+  handle:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm ci
+
+      - name: Route event
+        run: |
+          echo "Event type: ${{ github.event.action }}"
+
+          if [ "${{ github.event.action }}" = "scrape_content" ]; then
+            node scripts/scrape-beltline-news.js
+            node scripts/scrape-skate-news.js
+            node scripts/scrape-national-news.js
+            node scripts/scrape-global-news.js
+          fi
+
+          if [ "${{ github.event.action }}" = "build_newsletter" ]; then
+            node scripts/build-newsletter.js
+            node scripts/generate-issue-index.js
+            node scripts/register-delivery-job.js
+          fi
+
+          if [ "${{ github.event.action }}" = "send_delivery" ]; then
+            node scripts/send-deliveries.js
+          fi
+
+          if [ "${{ github.event.action }}" = "add_subscriber" ]; then
+            echo '${{ github.event.client_payload.subscriber }}' | node backend/api/subscribe-cli.js
+          fi
+
+      - name: Commit changes
+        run: |
+          git config user.name "boardwalk-bot"
+          git config user.email "bot@example.com"
+          git add data/ public/issues/
+          git commit -m "Dashboard-triggered update" || echo "No changes"
+          git push
