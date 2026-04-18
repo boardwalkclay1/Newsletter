@@ -5,7 +5,7 @@
   <title>Boardwalk Newsletter Studio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Google Fonts (Cursive + Print) -->
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Allura&family=Dancing+Script:wght@400;600&family=Parisienne&family=Pacifico&family=Satisfy&family=Tangerine:wght@400;700&family=Marck+Script&family=Homemade+Apple&family=Sacramento&family=Courgette&family=Alex+Brush&family=Bad+Script&family=Cookie&family=Yellowtail&family=Playfair+Display&family=Merriweather&family=Montserrat&family=Roboto&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="styles.css">
@@ -112,28 +112,7 @@
 
       <div class="field">
         <label>Font Family</label>
-        <select id="fontFamily">
-          <option value="Great Vibes">Great Vibes (Cursive)</option>
-          <option value="Allura">Allura (Cursive)</option>
-          <option value="Dancing Script">Dancing Script</option>
-          <option value="Parisienne">Parisienne</option>
-          <option value="Pacifico">Pacifico</option>
-          <option value="Satisfy">Satisfy</option>
-          <option value="Tangerine">Tangerine</option>
-          <option value="Marck Script">Marck Script</option>
-          <option value="Homemade Apple">Homemade Apple</option>
-          <option value="Sacramento">Sacramento</option>
-          <option value="Courgette">Courgette</option>
-          <option value="Alex Brush">Alex Brush</option>
-          <option value="Bad Script">Bad Script</option>
-          <option value="Cookie">Cookie</option>
-          <option value="Yellowtail">Yellowtail</option>
-
-          <option value="Playfair Display">Playfair Display (Print)</option>
-          <option value="Merriweather">Merriweather (Print)</option>
-          <option value="Montserrat">Montserrat (Print)</option>
-          <option value="Roboto">Roboto (Print)</option>
-        </select>
+        <select id="fontFamily"></select>
       </div>
 
       <div class="field">
@@ -173,7 +152,38 @@
       <h2>Live Preview</h2>
 
       <div id="preview" class="newsletter-preview">
-        <!-- JS will render the newsletter here -->
+
+        <!-- HEADER -->
+        <header class="bw-header">
+          <div class="bw-header-row">
+            <img src="assets/logo-boardwalk.png" class="bw-logo" id="previewLogo">
+            <div class="bw-date-time" id="previewDateTime"></div>
+          </div>
+        </header>
+
+        <!-- RIBBON -->
+        <div class="bw-ribbon ribbon-red" id="previewRibbon">
+          <span class="bw-ribbon-text">Boardwalk Newsletter</span>
+          <span class="bw-gold-stamp"></span>
+        </div>
+
+        <!-- BODY -->
+        <main class="bw-body" id="previewBody">
+          <h1 class="bw-title" id="previewTitle"></h1>
+
+          <div id="previewParagraphs"></div>
+          <div id="previewSections"></div>
+          <div id="previewLinks"></div>
+          <div id="previewQRCodes"></div>
+          <div id="previewEnding"></div>
+          <div id="previewVideo"></div>
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="bw-footer">
+          <div class="bw-signature" id="previewSignature">Boardwalk Clay</div>
+        </footer>
+
       </div>
     </main>
 
