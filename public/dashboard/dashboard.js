@@ -381,23 +381,13 @@ function renderPreview() {
 }
 
 // ===============================
-// PUBLISH ACTION (CLOUDFLARE ENV VARS)
+// PUBLISH ACTION (CLOUDFLARE PAGES FUNCTION)
 // ===============================
 async function triggerAction(action, payload = {}) {
-  const token = import.meta.env.GITHUB_PAT;
-  const owner = import.meta.env.GITHUB_OWNER;
-  const repo = import.meta.env.GITHUB_REPO;
-
-  await fetch(`https://api.github.com/repos/${owner}/${repo}/dispatches`, {
+  await fetch("/api/dispatch", {
     method: "POST",
-    headers: {
-      Accept: "application/vnd.github+json",
-      Authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify({
-      event_type: action,
-      client_payload: payload
-    })
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action, payload })
   });
 
   alert(`Triggered: ${action}`);
