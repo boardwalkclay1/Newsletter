@@ -2,145 +2,183 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Boardwalk Dashboard</title>
+  <title>Boardwalk Newsletter Studio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="/dashboard/dashboard.css">
+
+  <!-- Google Fonts (Cursive + Print) -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Allura&family=Dancing+Script:wght@400;600&family=Parisienne&family=Pacifico&family=Satisfy&family=Tangerine:wght@400;700&family=Marck+Script&family=Homemade+Apple&family=Sacramento&family=Courgette&family=Alex+Brush&family=Bad+Script&family=Cookie&family=Yellowtail&family=Playfair+Display&family=Merriweather&family=Montserrat&family=Roboto&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-  <header class="bw-header">
-    <h1>Boardwalk Dashboard</h1>
-    <p>Subscribers · Issues · Scraped News · Delivery · Automation</p>
-  </header>
+  <div class="dashboard">
 
-  <main class="bw-main">
+    <!-- =============================== -->
+    <!-- LEFT PANEL (EDITOR) -->
+    <!-- =============================== -->
+    <aside class="panel-left">
 
-    <!-- ========================= -->
-    <!-- OVERVIEW -->
-    <!-- ========================= -->
-    <section class="bw-card">
-      <h2>Overview</h2>
-      <div class="bw-grid">
-        <div class="bw-stat">
-          <span class="label">Subscribers</span>
-          <span id="statSubscribers" class="value">–</span>
-        </div>
-        <div class="bw-stat">
-          <span class="label">Issues</span>
-          <span id="statIssues" class="value">–</span>
-        </div>
-        <div class="bw-stat">
-          <span class="label">Last Delivery</span>
-          <span id="statLastDelivery" class="value small">–</span>
-        </div>
-      </div>
-    </section>
+      <h1 class="studio-title">Boardwalk Newsletter Studio</h1>
 
-    <!-- ========================= -->
-    <!-- AUTOMATION CONTROLS -->
-    <!-- ========================= -->
-    <section class="bw-card">
-      <h2>Automation Controls</h2>
-
-      <div class="bw-grid">
-        <button class="bw-btn" onclick="scrapeNow()">Scrape Now</button>
-        <button class="bw-btn" onclick="buildNow()">Build Newsletter</button>
-        <button class="bw-btn" onclick="sendNow()">Send Delivery</button>
+      <!-- Publish Button -->
+      <div class="publish-box">
+        <button id="publishBtn" class="btn-publish">🚀 Publish Newsletter</button>
+        <p class="note">Builds & publishes the issue live.</p>
       </div>
 
-      <p class="hint">
-        These buttons trigger GitHub Actions via <strong>repo_dispatch</strong>.
-      </p>
-    </section>
+      <hr>
 
-    <!-- ========================= -->
-    <!-- GITHUB TOKEN SETTINGS -->
-    <!-- ========================= -->
-    <section class="bw-card">
-      <h2>GitHub Token</h2>
-
-      <label>
-        <span class="label">Personal Access Token (PAT)</span>
-        <input id="ghTokenInput" type="password" placeholder="ghp_..." />
-      </label>
-
-      <div class="bw-grid">
-        <button class="bw-btn" onclick="saveToken()">Save Token</button>
-        <button class="bw-btn" onclick="clearToken()">Clear Token</button>
+      <!-- Date & Title -->
+      <div class="field">
+        <label>Date & Time</label>
+        <input id="dateTime" type="text">
       </div>
 
-      <p class="hint">
-        Token is stored locally in your browser.  
-        Required for triggering repo_dispatch events.
-      </p>
-    </section>
-
-    <!-- ========================= -->
-    <!-- SUBSCRIBERS -->
-    <!-- ========================= -->
-    <section class="bw-card">
-      <h2>Subscribers</h2>
-      <table class="bw-table">
-        <thead>
-          <tr>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Channels</th>
-            <th>Topics</th>
-            <th>Created</th>
-          </tr>
-        </thead>
-        <tbody id="subscribersTableBody">
-          <tr><td colspan="5">Loading…</td></tr>
-        </tbody>
-      </table>
-    </section>
-
-    <!-- ========================= -->
-    <!-- ISSUES -->
-    <!-- ========================= -->
-    <section class="bw-card">
-      <h2>Issues</h2>
-      <ul id="issuesList" class="bw-list"></ul>
-    </section>
-
-    <!-- ========================= -->
-    <!-- SCRAPED NEWS -->
-    <!-- ========================= -->
-    <section class="bw-card">
-      <h2>Scraped News</h2>
-
-      <div class="bw-tabs">
-        <button data-tab="beltline" class="active">BeltLine</button>
-        <button data-tab="local">Local Skating</button>
-        <button data-tab="national">National</button>
-        <button data-tab="global">Global</button>
+      <div class="field">
+        <label>Title</label>
+        <input id="title" type="text" placeholder="Boardwalk Newsletter – Issue #1">
       </div>
 
-      <div id="newsContainer" class="bw-news"></div>
-    </section>
+      <!-- Paragraphs -->
+      <div class="field">
+        <label>Paragraph 1</label>
+        <textarea id="p1"></textarea>
+      </div>
 
-  </main>
+      <div class="field">
+        <label>Paragraph 2</label>
+        <textarea id="p2"></textarea>
+      </div>
 
-  <footer class="bw-footer">
-    <p>© Boardwalk Clay – Internal Dashboard</p>
-  </footer>
+      <!-- Dynamic Sections -->
+      <h2>Sections</h2>
+      <div id="sectionsContainer"></div>
+      <button id="addSectionBtn" class="btn-add">+ Add Section</button>
 
-  <script src="/dashboard/dashboard.js" type="module"></script>
+      <!-- Ending -->
+      <div class="field">
+        <label>Ending / Sign-off</label>
+        <textarea id="ending"></textarea>
+      </div>
 
-  <script>
-    // Token save/clear helpers
-    function saveToken() {
-      const val = document.getElementById('ghTokenInput').value.trim();
-      if (!val) return alert('Enter a token first');
-      localStorage.setItem('gh_token', val);
-      alert('Token saved');
-    }
+      <!-- Links -->
+      <h2>Links</h2>
+      <div id="linksContainer"></div>
+      <button id="addLinkBtn" class="btn-add">+ Add Link</button>
 
-    function clearToken() {
-      localStorage.removeItem('gh_token');
-      alert('Token cleared');
-    }
-  </script>
+      <!-- QR Codes -->
+      <h2>QR Codes</h2>
+      <div id="qrContainer"></div>
+      <button id="addQrBtn" class="btn-add">+ Add QR</button>
 
+      <!-- Video -->
+      <h2>Video</h2>
+
+      <div class="field">
+        <label>Video Type</label>
+        <select id="videoType">
+          <option value="none">None</option>
+          <option value="embed">Embed URL</option>
+          <option value="upload">Upload Video File</option>
+        </select>
+      </div>
+
+      <div class="field" id="videoUrlField" style="display:none;">
+        <label>Video URL</label>
+        <input id="videoUrl" type="text" placeholder="YouTube / Vimeo URL">
+      </div>
+
+      <div class="field" id="videoUploadField" style="display:none;">
+        <label>Upload MP4</label>
+        <input id="videoFile" type="file" accept="video/mp4">
+      </div>
+
+      <div class="field">
+        <label>Video Placement</label>
+        <select id="videoPlacement">
+          <option value="top">Top</option>
+          <option value="bottom">Bottom</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Video Caption</label>
+        <input id="videoCaption" type="text">
+      </div>
+
+      <!-- Style -->
+      <h2>Style</h2>
+
+      <div class="field">
+        <label>Font Family</label>
+        <select id="fontFamily">
+          <option value="Great Vibes">Great Vibes (Cursive)</option>
+          <option value="Allura">Allura (Cursive)</option>
+          <option value="Dancing Script">Dancing Script</option>
+          <option value="Parisienne">Parisienne</option>
+          <option value="Pacifico">Pacifico</option>
+          <option value="Satisfy">Satisfy</option>
+          <option value="Tangerine">Tangerine</option>
+          <option value="Marck Script">Marck Script</option>
+          <option value="Homemade Apple">Homemade Apple</option>
+          <option value="Sacramento">Sacramento</option>
+          <option value="Courgette">Courgette</option>
+          <option value="Alex Brush">Alex Brush</option>
+          <option value="Bad Script">Bad Script</option>
+          <option value="Cookie">Cookie</option>
+          <option value="Yellowtail">Yellowtail</option>
+
+          <option value="Playfair Display">Playfair Display (Print)</option>
+          <option value="Merriweather">Merriweather (Print)</option>
+          <option value="Montserrat">Montserrat (Print)</option>
+          <option value="Roboto">Roboto (Print)</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Paper Style</label>
+        <select id="paperStyle">
+          <option value="parchment1">Parchment 1</option>
+          <option value="parchment2">Parchment 2</option>
+          <option value="parchment3">Parchment 3</option>
+          <option value="clean">Clean White</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Text Color</label>
+        <input id="textColor" type="color" value="#2b1b0f">
+      </div>
+
+      <div class="field">
+        <label>Text Background Color</label>
+        <input id="textBgColor" type="color" value="#fdf5e6">
+      </div>
+
+      <div class="field checkbox">
+        <label><input id="showLogo" type="checkbox" checked> Show Logo</label>
+      </div>
+
+      <div class="field checkbox">
+        <label><input id="showSignature" type="checkbox" checked> Show Signature</label>
+      </div>
+
+    </aside>
+
+    <!-- =============================== -->
+    <!-- RIGHT PANEL (PREVIEW) -->
+    <!-- =============================== -->
+    <main class="panel-right">
+      <h2>Live Preview</h2>
+
+      <div id="preview" class="newsletter-preview">
+        <!-- JS will render the newsletter here -->
+      </div>
+    </main>
+
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
