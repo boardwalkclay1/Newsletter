@@ -307,25 +307,20 @@ function getPaperBackground() {
 // RENDER PREVIEW
 // ===============================
 function renderPreview() {
-  // Header
   previewDateTime.textContent = state.dateTime;
   previewLogo.style.display = state.showLogo ? "block" : "none";
 
-  // Title
   previewTitle.textContent = state.title || "Boardwalk Newsletter";
 
-  // Body background + font
   previewBody.style.background = getPaperBackground();
   previewBody.style.color = state.textColor;
   previewBody.style.fontFamily = `'${state.fontFamily}', serif`;
 
-  // Paragraphs
   previewParagraphs.innerHTML = state.paragraphs
     .filter((p) => p.trim())
     .map((p) => `<p class="bw-paragraph indent">${escapeHtml(p)}</p>`)
     .join("");
 
-  // Sections
   previewSections.innerHTML = state.sections
     .filter((s) => s.title || s.body)
     .map(
@@ -338,7 +333,6 @@ function renderPreview() {
     )
     .join("");
 
-  // Links
   previewLinks.innerHTML = state.links.length
     ? `
       <section class="bw-links">
@@ -358,7 +352,6 @@ function renderPreview() {
     `
     : "";
 
-  // QR Codes
   previewQRCodes.innerHTML = state.qrCodes.length
     ? `
       <section class="bw-links">
@@ -376,31 +369,26 @@ function renderPreview() {
     `
     : "";
 
-  // Ending
   previewEnding.innerHTML = state.ending
     ? `<section class="bw-signoff"><p class="bw-paragraph indent">${escapeHtml(
         state.ending
       )}</p></section>`
     : "";
 
-  // Video
   previewVideo.innerHTML = buildVideoHtml();
 
-  // Signature
   previewSignature.style.display = state.showSignature ? "block" : "none";
 }
 
 // ===============================
-// PUBLISH ACTION
+// PUBLISH ACTION (CLOUDFLARE ENV VARS)
 // ===============================
 async function triggerAction(action, payload = {}) {
-  const token = localStorage.getItem("gh_token");
-  if (!token) {
-    alert("Missing GitHub token. Add it in dashboard settings.");
-    return;
-  }
+  const token = import.meta.env.GITHUB_PAT;
+  const owner = import.meta.env.GITHUB_OWNER;
+  const repo = import.meta.env.GITHUB_REPO;
 
-  await fetch(`https://api.github.com/repos/boardwlkclay1/Newsletter/dispatches`, {
+  await fetch(`https://api.github.com/repos/${owner}/${repo}/dispatches`, {
     method: "POST",
     headers: {
       Accept: "application/vnd.github+json",
