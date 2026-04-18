@@ -159,8 +159,9 @@ async function triggerAction(action, payload = {}) {
     return;
   }
 
-  const owner = '<YOUR_GITHUB_USERNAME>';
-  const repo = '<YOUR_REPO_NAME>';
+  // ⭐ YOUR REAL REPO + USERNAME
+  const owner = "boardwlkclay1";
+  const repo = "Newsletter";
 
   await fetch(`https://api.github.com/repos/${owner}/${repo}/dispatches`, {
     method: 'POST',
