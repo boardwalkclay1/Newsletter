@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Allura&family=Dancing+Script:wght@400;600&family=Parisienne&family=Pacifico&family=Satisfy&family=Tangerine:wght@400;700&family=Marck+Script&family=Homemade+Apple&family=Sacramento&family=Courgette&family=Alex+Brush&family=Bad+Script&family=Cookie&family=Yellowtail&family=Playfair+Display&family=Merriweather&family=Montserrat&family=Roboto&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display&family=Cormorant+Garamond&family=Lora&family=Merriweather&family=Dancing+Script:wght@400;600&family=Cinzel&family=Marcellus+SC&family=Uncial+Antiqua&family=Lobster&family=Inter&family=Montserrat&family=Poppins&family=Roboto+Slab&family=Crimson+Text&family=Spectral&family=Alegreya&family=Old+Standard+TT&family=Tangerine:wght@400;700&family=Arizonia&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="dashboard.css">
 </head>
@@ -110,19 +110,16 @@
       <!-- Style -->
       <h2>Style</h2>
 
+      <!-- FONT SELECTOR (auto-filled by JS) -->
       <div class="field">
         <label>Font Family</label>
         <select id="fontFamily"></select>
       </div>
 
+      <!-- PAPER SELECTOR (auto-filled by JS) -->
       <div class="field">
         <label>Paper Style</label>
-        <select id="paperStyle">
-          <option value="parchment1">Parchment 1</option>
-          <option value="parchment2">Parchment 2</option>
-          <option value="parchment3">Parchment 3</option>
-          <option value="clean">Clean White</option>
-        </select>
+        <select id="paperStyle"></select>
       </div>
 
       <div class="field">
@@ -156,7 +153,6 @@
         <!-- HEADER -->
         <header class="bw-header">
           <div class="bw-header-row">
-            <!-- ⭐ FIXED LOGO PATH -->
             <img src="/assets/logo-boardwalk.png" class="bw-logo" id="previewLogo">
             <div class="bw-date-time" id="previewDateTime"></div>
           </div>
@@ -190,7 +186,7 @@
 
   </div>
 
-<script type="module" src="dashboard.js"></script>
+<script src="dashboard.js"></script>
 
 </body>
 </html>
