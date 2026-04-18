@@ -1,366 +1,192 @@
-// ===============================
-// STATE
-// ===============================
-const state = {
-  dateTime: new Date().toLocaleString(),
-  title: "",
-  paragraphs: ["", ""],
-  sections: [],
-  ending: "",
-  links: [],
-  qrCodes: [],
-  video: {
-    type: "none",
-    url: "",
-    placement: "top",
-    caption: ""
-  },
-  fontFamily: "Great Vibes",
-  paperStyle: "",
-  textColor: "#2b1b0f",
-  textBgColor: "#fdf5e6",
-  showLogo: true,
-  showSignature: true,
-  ribbonStyle: "red"
-};
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Boardwalk Newsletter Studio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-// ===============================
-// PAPER + FONT OPTIONS
-// ===============================
-const PAPER_STYLES = {
-  "": "",
-  "Parchment 1": "https://i.imgur.com/8pQJY8G.jpeg",
-  "Parchment 2": "https://i.imgur.com/0m3Yw8k.jpeg",
-  "Parchment 3": "https://i.imgur.com/1YQk0qG.jpeg",
-  "Old Book Page": "https://i.imgur.com/8m1uQ0T.jpeg",
-  "Cream Texture": "https://i.imgur.com/4z0tq1N.jpeg",
-  "Antique Rough": "https://i.imgur.com/7Yp8m4x.jpeg",
-  "Warm Tan": "https://i.imgur.com/2uX8p9F.jpeg",
-  "Ivory Smooth": "https://i.imgur.com/3Qe1t8K.jpeg",
-  "Burnt Edge": "https://i.imgur.com/5rY8k2S.jpeg",
-  "Handmade Fiber": "https://i.imgur.com/9cW8t1L.jpeg"
-};
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display&family=Cormorant+Garamond&family=Lora&family=Merriweather&family=Dancing+Script:wght@400;600&family=Cinzel&family=Marcellus+SC&family=Uncial+Antiqua&family=Lobster&family=Inter&family=Montserrat&family=Poppins&family=Roboto+Slab&family=Crimson+Text&family=Spectral&family=Alegreya&family=Old+Standard+TT&family=Tangerine:wght@400;700&family=Arizonia&display=swap" rel="stylesheet">
 
-const FONT_STYLES = [
-  "Great Vibes",
-  "Playfair Display",
-  "Cormorant Garamond",
-  "Lora",
-  "Merriweather",
-  "Dancing Script",
-  "Cinzel",
-  "Marcellus SC",
-  "Uncial Antiqua",
-  "Lobster",
-  "Inter",
-  "Montserrat",
-  "Poppins",
-  "Roboto Slab",
-  "Crimson Text",
-  "Spectral",
-  "Alegreya",
-  "Old Standard TT",
-  "Tangerine",
-  "Arizonia"
-];
+  <link rel="stylesheet" href="dashboard.css">
+</head>
 
-// ===============================
-// ELEMENT REFERENCES
-// ===============================
-const previewDateTime = document.getElementById("previewDateTime");
-const previewTitle = document.getElementById("previewTitle");
-const previewParagraphs = document.getElementById("previewParagraphs");
-const previewSections = document.getElementById("previewSections");
-const previewLinks = document.getElementById("previewLinks");
-const previewQRCodes = document.getElementById("previewQRCodes");
-const previewEnding = document.getElementById("previewEnding");
-const previewVideo = document.getElementById("previewVideo");
-const previewSignature = document.getElementById("previewSignature");
-const previewLogo = document.getElementById("previewLogo");
-const previewBody = document.getElementById("previewBody");
+<body>
+  <div class="dashboard">
 
-// ===============================
-// BUILD PAPER + FONT SELECTORS
-// ===============================
-function buildSelectors() {
-  const paperSelect = document.getElementById("paperStyle");
-  const fontSelect = document.getElementById("fontFamily");
+    <!-- =============================== -->
+    <!-- LEFT PANEL (EDITOR) -->
+    <!-- =============================== -->
+    <aside class="panel-left">
 
-  // Paper styles
-  Object.entries(PAPER_STYLES).forEach(([label, url]) => {
-    const opt = document.createElement("option");
-    opt.value = url;
-    opt.textContent = label || "Clean / None";
-    paperSelect.appendChild(opt);
-  });
+      <h1 class="studio-title">Boardwalk Newsletter Studio</h1>
 
-  // Fonts
-  FONT_STYLES.forEach(font => {
-    const opt = document.createElement("option");
-    opt.value = font;
-    opt.textContent = font;
-    fontSelect.appendChild(opt);
-  });
-}
-
-// ===============================
-// BASIC FIELD BINDINGS
-// ===============================
-function bindBasicFields() {
-  document.getElementById("dateTime").value = state.dateTime;
-
-  const bind = (id, key) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.addEventListener("input", (e) => {
-      state[key] = e.target.value;
-      renderPreview();
-    });
-  };
-
-  bind("dateTime", "dateTime");
-  bind("title", "title");
-
-  document.getElementById("p1").addEventListener("input", (e) => {
-    state.paragraphs[0] = e.target.value;
-    renderPreview();
-  });
-
-  document.getElementById("p2").addEventListener("input", (e) => {
-    state.paragraphs[1] = e.target.value;
-    renderPreview();
-  });
-
-  document.getElementById("ending").addEventListener("input", (e) => {
-    state.ending = e.target.value;
-    renderPreview();
-  });
-
-  // Paper style
-  document.getElementById("paperStyle").addEventListener("change", (e) => {
-    state.paperStyle = e.target.value;
-    renderPreview();
-  });
-
-  // Font style
-  document.getElementById("fontFamily").addEventListener("change", (e) => {
-    state.fontFamily = e.target.value;
-    renderPreview();
-  });
-
-  // Colors
-  document.getElementById("textColor").addEventListener("input", (e) => {
-    state.textColor = e.target.value;
-    renderPreview();
-  });
-
-  document.getElementById("textBgColor").addEventListener("input", (e) => {
-    state.textBgColor = e.target.value;
-    renderPreview();
-  });
-
-  // Toggles
-  document.getElementById("showLogo").addEventListener("change", (e) => {
-    state.showLogo = e.target.checked;
-    renderPreview();
-  });
-
-  document.getElementById("showSignature").addEventListener("change", (e) => {
-    state.showSignature = e.target.checked;
-    renderPreview();
-  });
-
-  // Video
-  document.getElementById("videoType").addEventListener("change", (e) => {
-    state.video.type = e.target.value;
-
-    document.getElementById("videoUrlField").style.display =
-      state.video.type === "embed" ? "block" : "none";
-
-    document.getElementById("videoUploadField").style.display =
-      state.video.type === "upload" ? "block" : "none";
-
-    renderPreview();
-  });
-
-  document.getElementById("videoUrl").addEventListener("input", (e) => {
-    state.video.url = e.target.value;
-    renderPreview();
-  });
-
-  document.getElementById("videoFile").addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      state.video.url = URL.createObjectURL(file);
-      renderPreview();
-    }
-  });
-
-  document.getElementById("videoPlacement").addEventListener("change", (e) => {
-    state.video.placement = e.target.value;
-    renderPreview();
-  });
-
-  document.getElementById("videoCaption").addEventListener("input", (e) => {
-    state.video.caption = e.target.value;
-    renderPreview();
-  });
-
-  // Publish button
-  document.getElementById("publishBtn").addEventListener("click", () => {
-    triggerAction("build_newsletter", { newsletter: state });
-  });
-}
-
-// ===============================
-// ESCAPE HTML
-// ===============================
-function escapeHtml(str = "") {
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-// ===============================
-// VIDEO HTML
-// ===============================
-function buildVideoHtml() {
-  if (state.video.type === "none" || !state.video.url) return "";
-
-  if (state.video.type === "embed") {
-    let src = state.video.url.trim();
-    if (src.includes("youtube.com/watch")) {
-      const id = new URL(src).searchParams.get("v");
-      if (id) src = `https://www.youtube.com/embed/${id}`;
-    }
-
-    return `
-      <div class="bw-video">
-        <iframe src="${escapeHtml(src)}" allowfullscreen></iframe>
-        ${state.video.caption ? `<div class="bw-video-caption">${escapeHtml(state.video.caption)}</div>` : ""}
+      <!-- Publish Button -->
+      <div class="publish-box">
+        <button id="publishBtn" class="btn-publish">🚀 Publish Newsletter</button>
+        <p class="note">Builds & publishes the issue live.</p>
       </div>
-    `;
-  }
 
-  if (state.video.type === "upload") {
-    return `
-      <div class="bw-video">
-        <video controls>
-          <source src="${escapeHtml(state.video.url)}" type="video/mp4">
-        </video>
-        ${state.video.caption ? `<div class="bw-video-caption">${escapeHtml(state.video.caption)}</div>` : ""}
+      <hr>
+
+      <!-- Date & Title -->
+      <div class="field">
+        <label>Date & Time</label>
+        <input id="dateTime" type="text">
       </div>
-    `;
-  }
 
-  return "";
-}
+      <div class="field">
+        <label>Title</label>
+        <input id="title" type="text" placeholder="Boardwalk Newsletter – Issue #1">
+      </div>
 
-// ===============================
-// PAPER BACKGROUND
-// ===============================
-function getPaperBackground() {
-  if (!state.paperStyle) {
-    return state.textBgColor;
-  }
-  return `url('${state.paperStyle}')`;
-}
+      <!-- Paragraphs -->
+      <div class="field">
+        <label>Paragraph 1</label>
+        <textarea id="p1"></textarea>
+      </div>
 
-// ===============================
-// RENDER PREVIEW
-// ===============================
-function renderPreview() {
-  previewDateTime.textContent = state.dateTime;
-  previewLogo.style.display = state.showLogo ? "block" : "none";
+      <div class="field">
+        <label>Paragraph 2</label>
+        <textarea id="p2"></textarea>
+      </div>
 
-  previewTitle.textContent = state.title || "Boardwalk Newsletter";
+      <!-- Dynamic Sections -->
+      <h2>Sections</h2>
+      <div id="sectionsContainer"></div>
+      <button id="addSectionBtn" class="btn-add">+ Add Section</button>
 
-  previewBody.style.background = getPaperBackground();
-  previewBody.style.color = state.textColor;
-  previewBody.style.fontFamily = `'${state.fontFamily}', serif`;
+      <!-- Ending -->
+      <div class="field">
+        <label>Ending / Sign-off</label>
+        <textarea id="ending"></textarea>
+      </div>
 
-  previewParagraphs.innerHTML = state.paragraphs
-    .filter((p) => p.trim())
-    .map((p) => `<p class="bw-paragraph indent">${escapeHtml(p)}</p>`)
-    .join("");
+      <!-- Links -->
+      <h2>Links</h2>
+      <div id="linksContainer"></div>
+      <button id="addLinkBtn" class="btn-add">+ Add Link</button>
 
-  previewSections.innerHTML = state.sections
-    .filter((s) => s.title || s.body)
-    .map(
-      (s) => `
-      <section class="bw-section">
-        <h2 class="bw-section-title">${escapeHtml(s.title)}</h2>
-        <p class="bw-paragraph indent">${escapeHtml(s.body)}</p>
-      </section>
-    `
-    )
-    .join("");
+      <!-- QR Codes -->
+      <h2>QR Codes</h2>
+      <div id="qrContainer"></div>
+      <button id="addQrBtn" class="btn-add">+ Add QR</button>
 
-  previewLinks.innerHTML = state.links.length
-    ? `
-      <section class="bw-links">
-        <h3 class="bw-section-title">Links & Portals</h3>
-        <ul>
-          ${state.links
-            .filter((l) => l.url)
-            .map(
-              (l) =>
-                `<li><a href="${escapeHtml(l.url)}" target="_blank">${escapeHtml(
-                  l.label || l.url
-                )}</a></li>`
-            )
-            .join("")}
-        </ul>
-      </section>
-    `
-    : "";
+      <!-- Video -->
+      <h2>Video</h2>
 
-  previewQRCodes.innerHTML = state.qrCodes.length
-    ? `
-      <section class="bw-links">
-        <h3 class="bw-section-title">QR Codes</h3>
-        <ul>
-          ${state.qrCodes
-            .filter((q) => q.url)
-            .map(
-              (q) =>
-                `<li>${escapeHtml(q.label || "")} – ${escapeHtml(q.url)}</li>`
-            )
-            .join("")}
-        </ul>
-      </section>
-    `
-    : "";
+      <div class="field">
+        <label>Video Type</label>
+        <select id="videoType">
+          <option value="none">None</option>
+          <option value="embed">Embed URL</option>
+          <option value="upload">Upload Video File</option>
+        </select>
+      </div>
 
-  previewEnding.innerHTML = state.ending
-    ? `<section class="bw-signoff"><p class="bw-paragraph indent">${escapeHtml(
-        state.ending
-      )}</p></section>`
-    : "";
+      <div class="field" id="videoUrlField" style="display:none;">
+        <label>Video URL</label>
+        <input id="videoUrl" type="text" placeholder="YouTube / Vimeo URL">
+      </div>
 
-  previewVideo.innerHTML = buildVideoHtml();
+      <div class="field" id="videoUploadField" style="display:none;">
+        <label>Upload MP4</label>
+        <input id="videoFile" type="file" accept="video/mp4">
+      </div>
 
-  previewSignature.style.display = state.showSignature ? "block" : "none";
-}
+      <div class="field">
+        <label>Video Placement</label>
+        <select id="videoPlacement">
+          <option value="top">Top</option>
+          <option value="bottom">Bottom</option>
+        </select>
+      </div>
 
-// ===============================
-// PUBLISH ACTION (CLOUDFLARE FUNCTION)
-// ===============================
-async function triggerAction(action, payload = {}) {
-  await fetch("/api/dispatch", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action, payload })
-  });
+      <div class="field">
+        <label>Video Caption</label>
+        <input id="videoCaption" type="text">
+      </div>
 
-  alert(`Triggered: ${action}`);
-}
+      <!-- Style -->
+      <h2>Style</h2>
 
-// ===============================
-// INIT
-// ===============================
-buildSelectors();
-bindBasicFields();
-renderPreview();
+      <!-- FONT SELECTOR (auto-filled by JS) -->
+      <div class="field">
+        <label>Font Family</label>
+        <select id="fontFamily"></select>
+      </div>
+
+      <!-- PAPER SELECTOR (auto-filled by JS) -->
+      <div class="field">
+        <label>Paper Style</label>
+        <select id="paperStyle"></select>
+      </div>
+
+      <div class="field">
+        <label>Text Color</label>
+        <input id="textColor" type="color" value="#2b1b0f">
+      </div>
+
+      <div class="field">
+        <label>Text Background Color</label>
+        <input id="textBgColor" type="color" value="#fdf5e6">
+      </div>
+
+      <div class="field checkbox">
+        <label><input id="showLogo" type="checkbox" checked> Show Logo</label>
+      </div>
+
+      <div class="field checkbox">
+        <label><input id="showSignature" type="checkbox" checked> Show Signature</label>
+      </div>
+
+    </aside>
+
+    <!-- =============================== -->
+    <!-- RIGHT PANEL (PREVIEW) -->
+    <!-- =============================== -->
+    <main class="panel-right">
+      <h2>Live Preview</h2>
+
+      <div id="preview" class="newsletter-preview">
+
+        <!-- HEADER -->
+        <header class="bw-header">
+          <div class="bw-header-row">
+            <img src="/assets/logo-boardwalk.png" class="bw-logo" id="previewLogo">
+            <div class="bw-date-time" id="previewDateTime"></div>
+          </div>
+        </header>
+
+        <!-- RIBBON -->
+        <div class="bw-ribbon ribbon-red" id="previewRibbon">
+          <span class="bw-ribbon-text">Boardwalk Newsletter</span>
+          <span class="bw-gold-stamp"></span>
+        </div>
+
+        <!-- BODY -->
+        <main class="bw-body" id="previewBody">
+          <h1 class="bw-title" id="previewTitle"></h1>
+
+          <div id="previewParagraphs"></div>
+          <div id="previewSections"></div>
+          <div id="previewLinks"></div>
+          <div id="previewQRCodes"></div>
+          <div id="previewEnding"></div>
+          <div id="previewVideo"></div>
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="bw-footer">
+          <div class="bw-signature" id="previewSignature">Boardwalk Clay</div>
+        </footer>
+
+      </div>
+    </main>
+
+  </div>
+
+<script src="dashboard.js"></script>
+
+</body>
+</html>
