@@ -1,15 +1,8 @@
 export function renderNewsletter(state) {
-  // PUBLIC DOMAIN PAPER TEXTURES
-  const paperTextures = {
-    parchment1: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Old_paper_texture_01.jpg",
-    parchment2: "https://upload.wikimedia.org/wikipedia/commons/3/3f/Old_paper_texture_02.jpg",
-    parchment3: "https://upload.wikimedia.org/wikipedia/commons/4/4d/Old_paper_texture_03.jpg"
-  };
-
-  const paperBackground =
-    state.paperStyle === "clean"
-      ? state.textBgColor
-      : `url('${paperTextures[state.paperStyle] || paperTextures.parchment1}')`;
+  // PAPER BACKGROUND (supports full URLs)
+  const paperBackground = state.paperStyle
+    ? `url('${state.paperStyle}')`
+    : state.textBgColor;
 
   // VIDEO BLOCK
   function buildVideo() {
@@ -102,15 +95,21 @@ export function renderNewsletter(state) {
   <meta charset="utf-8">
   <title>${state.title || "Boardwalk Newsletter"}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=${encodeURIComponent(state.fontFamily)}&display=swap" rel="stylesheet">
+
   <style>
     body {
       margin: 0;
       font-family: '${state.fontFamily}', serif;
       background: ${paperBackground};
       background-size: cover;
+      background-repeat: repeat;
       padding: 2rem;
       color: ${state.textColor};
     }
+
     .bw-logo { width: 140px; display: block; margin: 0 auto 1rem; }
     .bw-title { text-align: center; font-size: 2rem; margin-bottom: 1rem; }
     .bw-paragraph { margin: 1rem 0; line-height: 1.6; }
