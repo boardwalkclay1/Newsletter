@@ -125,11 +125,9 @@ function renderPreview() {
     `;
   }
 
-  // Toggles
   $("previewLogo").style.display = state.showLogo ? "block" : "none";
   $("previewSignature").style.display = state.showSignature ? "block" : "none";
 
-  // Style
   const preview = $("preview");
   preview.style.fontFamily = state.fontFamily || "inherit";
   preview.style.color = state.textColor;
@@ -137,7 +135,7 @@ function renderPreview() {
 }
 
 // ===============================
-// FORM BINDINGS (LIVE AS YOU TYPE)
+// FORM BINDINGS
 // ===============================
 function initBindings() {
   bindInput("dateTime", v => (state.dateTime = v));
@@ -163,7 +161,7 @@ function initBindings() {
 }
 
 // ===============================
-// DYNAMIC BLOCKS (SECTIONS / LINKS / QR)
+// DYNAMIC BLOCKS
 // ===============================
 $("addSectionBtn").addEventListener("click", () => {
   const index = state.sections.length;
@@ -177,16 +175,13 @@ $("addSectionBtn").addEventListener("click", () => {
   `;
   $("sectionsContainer").appendChild(div);
 
-  const titleInput = div.querySelector(".section-title");
-  const bodyInput = div.querySelector(".section-body");
-
-  titleInput.addEventListener("input", () => {
-    state.sections[index].title = titleInput.value;
+  div.querySelector(".section-title").addEventListener("input", e => {
+    state.sections[index].title = e.target.value;
     renderPreview();
   });
 
-  bodyInput.addEventListener("input", () => {
-    state.sections[index].body = bodyInput.value;
+  div.querySelector(".section-body").addEventListener("input", e => {
+    state.sections[index].body = e.target.value;
     renderPreview();
   });
 });
@@ -203,16 +198,13 @@ $("addLinkBtn").addEventListener("click", () => {
   `;
   $("linksContainer").appendChild(div);
 
-  const labelInput = div.querySelector(".link-label");
-  const urlInput = div.querySelector(".link-url");
-
-  labelInput.addEventListener("input", () => {
-    state.links[index].label = labelInput.value;
+  div.querySelector(".link-label").addEventListener("input", e => {
+    state.links[index].label = e.target.value;
     renderPreview();
   });
 
-  urlInput.addEventListener("input", () => {
-    state.links[index].url = urlInput.value;
+  div.querySelector(".link-url").addEventListener("input", e => {
+    state.links[index].url = e.target.value;
     renderPreview();
   });
 });
@@ -229,84 +221,56 @@ $("addQrBtn").addEventListener("click", () => {
   `;
   $("qrContainer").appendChild(div);
 
-  const labelInput = div.querySelector(".qr-label");
-  const urlInput = div.querySelector(".qr-url");
-
-  labelInput.addEventListener("input", () => {
-    state.qrCodes[index].label = labelInput.value;
+  div.querySelector(".qr-label").addEventListener("input", e => {
+    state.qrCodes[index].label = e.target.value;
     renderPreview();
   });
 
-  urlInput.addEventListener("input", () => {
-    state.qrCodes[index].url = urlInput.value;
+  div.querySelector(".qr-url").addEventListener("input", e => {
+    state.qrCodes[index].url = e.target.value;
     renderPreview();
   });
 });
 
 // ===============================
-// GENERATE BUTTON = AUTO GENERATOR
+// GENERATE BUTTON (REAL GENERATOR)
 // ===============================
 $("generateBtn").addEventListener("click", async () => {
-  // CALL YOUR AUTO-GENERATOR PIPELINE HERE
-  // Adjust URL/action to match your backend
-  const res = await fetch("/api/dispatch", {
+  const res = await fetch("/api/generate", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      action: "auto_generate_newsletter"
-    })
+    headers: { "Content-Type": "application/json" }
   });
 
   const data = await res.json();
-  // Expecting `data.newsletter` to be the full object
+  const n = data.newsletter;
 
-  const n = data.newsletter || {};
+  Object.assign(state, n);
 
-  // Fill state
-  state.dateTime = n.dateTime || "";
-  state.title = n.title || "";
-  state.paragraphs = n.paragraphs || ["", ""];
-  state.sections = n.sections || [];
-  state.links = n.links || [];
-  state.qrCodes = n.qrCodes || [];
-  state.ending = n.ending || "";
-  state.video = n.video || state.video;
-  state.fontFamily = n.fontFamily || state.fontFamily;
-  state.paperStyle = n.paperStyle || state.paperStyle;
-  state.textColor = n.textColor || state.textColor;
-  state.textBgColor = n.textBgColor || state.textBgColor;
-  state.showLogo = n.showLogo ?? state.showLogo;
-  state.showSignature = n.showSignature ?? state.showSignature;
+  $("dateTime").value = n.dateTime;
+  $("title").value = n.title;
+  $("p1").value = n.paragraphs[0] || "";
+  $("p2").value = n.paragraphs[1] || "";
+  $("ending").value = n.ending || "";
 
-  // Push into form fields so UI matches
-  $("dateTime").value = state.dateTime;
-  $("title").value = state.title;
-  $("p1").value = state.paragraphs[0] || "";
-  $("p2").value = state.paragraphs[1] || "";
-  $("ending").value = state.ending || "";
+  $("videoType").value = n.video.type;
+  $("videoUrl").value = n.video.url;
+  $("videoPlacement").value = n.video.placement;
+  $("videoCaption").value = n.video.caption;
 
-  $("videoType").value = state.video.type;
-  $("videoUrl").value = state.video.url || "";
-  $("videoPlacement").value = state.video.placement || "top";
-  $("videoCaption").value = state.video.caption || "";
+  $("fontFamily").value = n.fontFamily;
+  $("paperStyle").value = n.paperStyle;
+  $("textColor").value = n.textColor;
+  $("textBgColor").value = n.textBgColor;
+  $("showLogo").checked = n.showLogo;
+  $("showSignature").checked = n.showSignature;
 
-  $("fontFamily").value = state.fontFamily;
-  $("paperStyle").value = state.paperStyle;
-  $("textColor").value = state.textColor;
-  $("textBgColor").value = state.textBgColor;
-  $("showLogo").checked = state.showLogo;
-  $("showSignature").checked = state.showSignature;
-
-  // Rebuild dynamic blocks (sections/links/qr) if you want full sync
-  // For now, just re-render preview:
   renderPreview();
 });
 
 // ===============================
-// PUBLISH BUTTON
+// PUBLISH BUTTON (GITHUB DISPATCH)
 // ===============================
 $("publishBtn").addEventListener("click", async () => {
-  // state is already live-bound
   await fetch("/api/dispatch", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -315,6 +279,7 @@ $("publishBtn").addEventListener("click", async () => {
       payload: state
     })
   });
+
   alert("Newsletter published.");
 });
 
