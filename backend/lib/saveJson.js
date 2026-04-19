@@ -1,9 +1,10 @@
-import fs from 'node:fs';
-import path from 'node:path';
+import fs from "fs";
 
-export function saveJson(relPath, data) {
-  const full = path.join(process.cwd(), relPath);
-  const dir = path.dirname(full);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(full, JSON.stringify(data, null, 2), 'utf8');
+export function saveJson(path, data) {
+  try {
+    fs.mkdirSync(path.split("/").slice(0, -1).join("/"), { recursive: true });
+    fs.writeFileSync(path, JSON.stringify(data, null, 2));
+  } catch (err) {
+    console.error("saveJson error:", err);
+  }
 }
