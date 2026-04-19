@@ -1,67 +1,62 @@
 export async function onRequestPost(context) {
-  // 1. RUN YOUR SCRAPERS
-  // Replace these with your real scraping functions or API calls.
-  const headlines = await context.env.NEWS_SCRAPER.fetch();
-  const markets = await context.env.MARKET_SCRAPER.fetch();
-  const sports = await context.env.SPORTS_SCRAPER.fetch();
-  const weather = await context.env.WEATHER_SCRAPER.fetch();
+  try {
+    // ===============================
+    // AUTO-GENERATED NEWSLETTER DATA
+    // (Replace with your real scrapers later)
+    // ===============================
 
-  // 2. BUILD THE NEWSLETTER OBJECT
-  const newsletter = {
-    dateTime: new Date().toLocaleString("en-US", { timeZone: "America/New_York" }),
+    const now = new Date();
 
-    title: `Boardwalk Newsletter – ${new Date().toLocaleDateString()}`,
+    const newsletter = {
+      dateTime: now.toLocaleString("en-US", { timeZone: "America/New_York" }),
+      title: `Boardwalk Newsletter – ${now.toLocaleDateString()}`,
 
-    paragraphs: [
-      `Here’s your morning rundown. Markets opened with ${markets.summary}.`,
-      `Top story today: ${headlines.top}.`
-    ],
+      paragraphs: [
+        "This is an automatically generated newsletter paragraph. Replace this with real scraped content.",
+        "This is the second auto-generated paragraph. Replace this with real data."
+      ],
 
-    sections: [
-      {
-        title: "Market Update",
-        body: markets.details
+      sections: [
+        { title: "Market Update", body: "Auto-generated market summary goes here." },
+        { title: "Top Headlines", body: "Auto-generated headlines go here." },
+        { title: "Sports", body: "Auto-generated sports summary goes here." },
+        { title: "Weather", body: "Auto-generated weather summary goes here." }
+      ],
+
+      links: [
+        { label: "Boardwalk Clay", url: "https://boardwalkclay.com" }
+      ],
+
+      qrCodes: [
+        { label: "Portal", url: "https://boardwalkclay.com" }
+      ],
+
+      ending: "Stay sharp. Stay moving. – Boardwalk Clay",
+
+      video: {
+        type: "embed",
+        url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        placement: "bottom",
+        caption: "Daily Motivation"
       },
-      {
-        title: "Top Headlines",
-        body: headlines.all.join("\n\n")
-      },
-      {
-        title: "Sports",
-        body: sports.summary
-      },
-      {
-        title: "Weather",
-        body: weather.summary
-      }
-    ],
 
-    links: [
-      { label: "Full Market Report", url: markets.url },
-      { label: "Top Headlines", url: headlines.url }
-    ],
+      fontFamily: "Inter",
+      paperStyle: "",
+      textColor: "#f5f2e9",
+      textBgColor: "#0b0906",
+      showLogo: true,
+      showSignature: true
+    };
 
-    qrCodes: [
-      { label: "Boardwalk Portal", url: "https://boardwalkclay.com" }
-    ],
+    // ===============================
+    // RETURN JSON (REQUIRED)
+    // ===============================
+    return Response.json({ newsletter });
 
-    ending: "Stay sharp. Stay moving. – Boardwalk Clay",
-
-    video: {
-      type: "embed",
-      url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-      placement: "bottom",
-      caption: "Daily Motivation"
-    },
-
-    fontFamily: "Inter",
-    paperStyle: "",
-    textColor: "#f5f2e9",
-    textBgColor: "#0b0906",
-    showLogo: true,
-    showSignature: true
-  };
-
-  // 3. RETURN THE NEWSLETTER TO THE DASHBOARD
-  return Response.json({ newsletter });
+  } catch (err) {
+    return new Response(
+      JSON.stringify({ error: true, message: err.message }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
 }
