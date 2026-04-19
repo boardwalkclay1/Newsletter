@@ -1,192 +1,240 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Boardwalk Newsletter Studio</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+// ===============================
+// STATE
+// ===============================
+let state = {
+  dateTime: "",
+  title: "",
+  paragraphs: [],
+  sections: [],
+  links: [],
+  qrCodes: [],
+  video: {
+    type: "none",
+    url: "",
+    placement: "top",
+    caption: ""
+  },
+  fontFamily: "",
+  paperStyle: "",
+  textColor: "#2b1b0f",
+  textBgColor: "#fdf5e6",
+  showLogo: true,
+  showSignature: true
+};
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display&family=Cormorant+Garamond&family=Lora&family=Merriweather&family=Dancing+Script:wght@400;600&family=Cinzel&family=Marcellus+SC&family=Uncial+Antiqua&family=Lobster&family=Inter&family=Montserrat&family=Poppins&family=Roboto+Slab&family=Crimson+Text&family=Spectral&family=Alegreya&family=Old+Standard+TT&family=Tangerine:wght@400;700&family=Arizonia&display=swap" rel="stylesheet">
+// ===============================
+// HELPERS
+// ===============================
+function $(id) {
+  return document.getElementById(id);
+}
 
-  <link rel="stylesheet" href="dashboard.css">
-</head>
+function updateState() {
+  state.dateTime = $("dateTime").value;
+  state.title = $("title").value;
 
-<body>
-  <div class="dashboard">
+  state.paragraphs = [
+    $("p1").value,
+    $("p2").value
+  ];
 
-    <!-- =============================== -->
-    <!-- LEFT PANEL (EDITOR) -->
-    <!-- =============================== -->
-    <aside class="panel-left">
+  state.video.type = $("videoType").value;
+  state.video.url = $("videoUrl").value;
+  state.video.placement = $("videoPlacement").value;
+  state.video.caption = $("videoCaption").value;
 
-      <h1 class="studio-title">Boardwalk Newsletter Studio</h1>
+  state.fontFamily = $("fontFamily").value;
+  state.paperStyle = $("paperStyle").value;
+  state.textColor = $("textColor").value;
+  state.textBgColor = $("textBgColor").value;
 
-      <!-- Publish Button -->
-      <div class="publish-box">
-        <button id="publishBtn" class="btn-publish">🚀 Publish Newsletter</button>
-        <p class="note">Builds & publishes the issue live.</p>
+  state.showLogo = $("showLogo").checked;
+  state.showSignature = $("showSignature").checked;
+}
+
+// ===============================
+// RENDER PREVIEW
+// ===============================
+function renderPreview() {
+  updateState();
+
+  $("previewDateTime").textContent = state.dateTime;
+  $("previewTitle").textContent = state.title;
+
+  // Paragraphs
+  $("previewParagraphs").innerHTML = state.paragraphs
+    .filter(p => p.trim())
+    .map(p => `<p>${p}</p>`)
+    .join("");
+
+  // Sections
+  $("previewSections").innerHTML = state.sections
+    .map(s => `<section><h2>${s.title}</h2><p>${s.body}</p></section>`)
+    .join("");
+
+  // Links
+  $("previewLinks").innerHTML = state.links
+    .map(l => `<p><a href="${l.url}" target="_blank">${l.label}</a></p>`)
+    .join("");
+
+  // QR Codes
+  $("previewQRCodes").innerHTML = state.qrCodes
+    .map(q => `<p>${q.label}: ${q.url}</p>`)
+    .join("");
+
+  // Ending
+  $("previewEnding").innerHTML = state.ending ? `<p>${state.ending}</p>` : "";
+
+  // Video
+  if (state.video.type === "none" || !state.video.url.trim()) {
+    $("previewVideo").innerHTML = "";
+  } else {
+    let src = state.video.url.trim();
+
+    if (src.includes("youtube.com/watch")) {
+      const id = new URL(src).searchParams.get("v");
+      if (id) src = `https://www.youtube.com/embed/${id}`;
+    }
+
+    $("previewVideo").innerHTML = `
+      <div class="video-block">
+        <iframe src="${src}" allowfullscreen></iframe>
+        ${state.video.caption ? `<p>${state.video.caption}</p>` : ""}
       </div>
+    `;
+  }
 
-      <hr>
+  // Logo toggle
+  $("previewLogo").style.display = state.showLogo ? "block" : "none";
 
-      <!-- Date & Title -->
-      <div class="field">
-        <label>Date & Time</label>
-        <input id="dateTime" type="text">
-      </div>
+  // Signature toggle
+  $("previewSignature").style.display = state.showSignature ? "block" : "none";
 
-      <div class="field">
-        <label>Title</label>
-        <input id="title" type="text" placeholder="Boardwalk Newsletter – Issue #1">
-      </div>
+  // Styles
+  $("preview").style.fontFamily = state.fontFamily;
+  $("preview").style.color = state.textColor;
+  $("preview").style.background = state.paperStyle || state.textBgColor;
+}
 
-      <!-- Paragraphs -->
-      <div class="field">
-        <label>Paragraph 1</label>
-        <textarea id="p1"></textarea>
-      </div>
+// ===============================
+// ADD SECTION
+// ===============================
+$("addSectionBtn").addEventListener("click", () => {
+  const index = state.sections.length;
 
-      <div class="field">
-        <label>Paragraph 2</label>
-        <textarea id="p2"></textarea>
-      </div>
+  state.sections.push({ title: "", body: "" });
 
-      <!-- Dynamic Sections -->
-      <h2>Sections</h2>
-      <div id="sectionsContainer"></div>
-      <button id="addSectionBtn" class="btn-add">+ Add Section</button>
+  const div = document.createElement("div");
+  div.className = "section-block";
+  div.innerHTML = `
+    <input class="section-title" placeholder="Section Title">
+    <textarea class="section-body" placeholder="Section Body"></textarea>
+  `;
 
-      <!-- Ending -->
-      <div class="field">
-        <label>Ending / Sign-off</label>
-        <textarea id="ending"></textarea>
-      </div>
+  $("sectionsContainer").appendChild(div);
 
-      <!-- Links -->
-      <h2>Links</h2>
-      <div id="linksContainer"></div>
-      <button id="addLinkBtn" class="btn-add">+ Add Link</button>
+  const titleInput = div.querySelector(".section-title");
+  const bodyInput = div.querySelector(".section-body");
 
-      <!-- QR Codes -->
-      <h2>QR Codes</h2>
-      <div id="qrContainer"></div>
-      <button id="addQrBtn" class="btn-add">+ Add QR</button>
+  titleInput.addEventListener("input", () => {
+    state.sections[index].title = titleInput.value;
+    renderPreview();
+  });
 
-      <!-- Video -->
-      <h2>Video</h2>
+  bodyInput.addEventListener("input", () => {
+    state.sections[index].body = bodyInput.value;
+    renderPreview();
+  });
+});
 
-      <div class="field">
-        <label>Video Type</label>
-        <select id="videoType">
-          <option value="none">None</option>
-          <option value="embed">Embed URL</option>
-          <option value="upload">Upload Video File</option>
-        </select>
-      </div>
+// ===============================
+// ADD LINK
+// ===============================
+$("addLinkBtn").addEventListener("click", () => {
+  const index = state.links.length;
 
-      <div class="field" id="videoUrlField" style="display:none;">
-        <label>Video URL</label>
-        <input id="videoUrl" type="text" placeholder="YouTube / Vimeo URL">
-      </div>
+  state.links.push({ label: "", url: "" });
 
-      <div class="field" id="videoUploadField" style="display:none;">
-        <label>Upload MP4</label>
-        <input id="videoFile" type="file" accept="video/mp4">
-      </div>
+  const div = document.createElement("div");
+  div.className = "link-block";
+  div.innerHTML = `
+    <input class="link-label" placeholder="Label">
+    <input class="link-url" placeholder="URL">
+  `;
 
-      <div class="field">
-        <label>Video Placement</label>
-        <select id="videoPlacement">
-          <option value="top">Top</option>
-          <option value="bottom">Bottom</option>
-        </select>
-      </div>
+  $("linksContainer").appendChild(div);
 
-      <div class="field">
-        <label>Video Caption</label>
-        <input id="videoCaption" type="text">
-      </div>
+  const labelInput = div.querySelector(".link-label");
+  const urlInput = div.querySelector(".link-url");
 
-      <!-- Style -->
-      <h2>Style</h2>
+  labelInput.addEventListener("input", () => {
+    state.links[index].label = labelInput.value;
+    renderPreview();
+  });
 
-      <!-- FONT SELECTOR (auto-filled by JS) -->
-      <div class="field">
-        <label>Font Family</label>
-        <select id="fontFamily"></select>
-      </div>
+  urlInput.addEventListener("input", () => {
+    state.links[index].url = urlInput.value;
+    renderPreview();
+  });
+});
 
-      <!-- PAPER SELECTOR (auto-filled by JS) -->
-      <div class="field">
-        <label>Paper Style</label>
-        <select id="paperStyle"></select>
-      </div>
+// ===============================
+// ADD QR
+// ===============================
+$("addQrBtn").addEventListener("click", () => {
+  const index = state.qrCodes.length;
 
-      <div class="field">
-        <label>Text Color</label>
-        <input id="textColor" type="color" value="#2b1b0f">
-      </div>
+  state.qrCodes.push({ label: "", url: "" });
 
-      <div class="field">
-        <label>Text Background Color</label>
-        <input id="textBgColor" type="color" value="#fdf5e6">
-      </div>
+  const div = document.createElement("div");
+  div.className = "qr-block";
+  div.innerHTML = `
+    <input class="qr-label" placeholder="Label">
+    <input class="qr-url" placeholder="URL">
+  `;
 
-      <div class="field checkbox">
-        <label><input id="showLogo" type="checkbox" checked> Show Logo</label>
-      </div>
+  $("qrContainer").appendChild(div);
 
-      <div class="field checkbox">
-        <label><input id="showSignature" type="checkbox" checked> Show Signature</label>
-      </div>
+  const labelInput = div.querySelector(".qr-label");
+  const urlInput = div.querySelector(".qr-url");
 
-    </aside>
+  labelInput.addEventListener("input", () => {
+    state.qrCodes[index].label = labelInput.value;
+    renderPreview();
+  });
 
-    <!-- =============================== -->
-    <!-- RIGHT PANEL (PREVIEW) -->
-    <!-- =============================== -->
-    <main class="panel-right">
-      <h2>Live Preview</h2>
+  urlInput.addEventListener("input", () => {
+    state.qrCodes[index].url = urlInput.value;
+    renderPreview();
+  });
+});
 
-      <div id="preview" class="newsletter-preview">
+// ===============================
+// GENERATE BUTTON
+// ===============================
+$("generateBtn").addEventListener("click", () => {
+  renderPreview();
+});
 
-        <!-- HEADER -->
-        <header class="bw-header">
-          <div class="bw-header-row">
-            <img src="/assets/logo-boardwalk.png" class="bw-logo" id="previewLogo">
-            <div class="bw-date-time" id="previewDateTime"></div>
-          </div>
-        </header>
+// ===============================
+// PUBLISH BUTTON
+// ===============================
+$("publishBtn").addEventListener("click", async () => {
+  updateState();
 
-        <!-- RIBBON -->
-        <div class="bw-ribbon ribbon-red" id="previewRibbon">
-          <span class="bw-ribbon-text">Boardwalk Newsletter</span>
-          <span class="bw-gold-stamp"></span>
-        </div>
+  await fetch("/api/dispatch", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      action: "build_newsletter",
+      payload: state
+    })
+  });
 
-        <!-- BODY -->
-        <main class="bw-body" id="previewBody">
-          <h1 class="bw-title" id="previewTitle"></h1>
+  alert("Newsletter published.");
+});
 
-          <div id="previewParagraphs"></div>
-          <div id="previewSections"></div>
-          <div id="previewLinks"></div>
-          <div id="previewQRCodes"></div>
-          <div id="previewEnding"></div>
-          <div id="previewVideo"></div>
-        </main>
-
-        <!-- FOOTER -->
-        <footer class="bw-footer">
-          <div class="bw-signature" id="previewSignature">Boardwalk Clay</div>
-        </footer>
-
-      </div>
-    </main>
-
-  </div>
-
-<script src="dashboard.js"></script>
-
-</body>
-</html>
+// ===============================
+// INITIAL PREVIEW
+// ===============================
+renderPreview();
