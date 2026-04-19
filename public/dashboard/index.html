@@ -5,22 +5,6 @@
   <title>Boardwalk Newsletter Studio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
-  <link rel="shortcut icon" href="/assets/favicon.ico">
-
-  <!-- Social Preview -->
-  <meta property="og:title" content="Boardwalk Newsletter Studio">
-  <meta property="og:description" content="Create, preview, and publish Boardwalk newsletters with one click.">
-  <meta property="og:image" content="/assets/social-preview.jpg">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://your-dashboard-domain.com/dashboard/">
-
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Boardwalk Newsletter Studio">
-  <meta name="twitter:description" content="Create, preview, and publish Boardwalk newsletters with one click.">
-  <meta name="twitter:image" content="/assets/social-preview.jpg">
-
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display&family=Cormorant+Garamond&family=Lora&family=Merriweather&family=Dancing+Script:wght@400;600&family=Cinzel&family=Marcellus+SC&family=Uncial+Antiqua&family=Lobster&family=Inter&family=Montserrat&family=Poppins&family=Roboto+Slab&family=Crimson+Text&family=Spectral&family=Alegreya&family=Old+Standard+TT&family=Tangerine:wght@400;700&family=Arizonia&display=swap" rel="stylesheet">
 
@@ -37,11 +21,10 @@
 
       <h1 class="studio-title">Boardwalk Newsletter Studio</h1>
 
-      <!-- BUTTONS -->
-      <div class="publish-box">
-        <button id="generateBtn" class="btn-generate">📝 Generate Preview</button>
-        <button id="publishBtn" class="btn-publish">🚀 Publish Newsletter</button>
-        <p class="note">Generate = preview only. Publish = build & deploy.</p>
+      <!-- BUTTONS (TOP LEFT + TOP RIGHT) -->
+      <div class="top-buttons">
+        <button id="generateBtn" class="btn-generate">📝 Generate Newsletter</button>
+        <button id="publishBtn" class="btn-publish right">🚀 Publish</button>
       </div>
 
       <hr>
@@ -162,9 +145,6 @@
     <!-- =============================== -->
     <main class="panel-right">
       <h2>Live Preview</h2>
-
-      <!-- PUBLISH BUTTON IN PREVIEW -->
-      <button id="publishBtnTop" class="btn-publish preview-publish">🚀 Publish</button>
 
       <div id="preview" class="newsletter-preview">
 
