@@ -28,7 +28,7 @@ export async function onRequestPost(context) {
       ],
 
       qrCodes: [
-        { label: "Portal", url: "https://boardwalkclay.com" }
+        { label: "Portal", url: "https://boardwalk-news.pages.dev/" }
       ],
 
       ending: "Stay sharp. Stay moving. – Boardwalk Clay",
