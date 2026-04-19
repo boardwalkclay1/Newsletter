@@ -1,9 +1,12 @@
+// src/mainNewsletterData.js
+
 import {
   getLocalRinkEvents,
   getNationalRinkEvents,
   getGlobalRinkEvents,
   splitLocalByType
 } from './rinkEvents.js';
+
 import { getRandomSegment } from './beltlineMap.js';
 import { getRandomRestaurants } from './beltlineRestaurants.js';
 
@@ -14,9 +17,16 @@ export async function buildNewsletterData(options = {}) {
     manualContent = {}
   } = options;
 
+  // BeltLine map segment
   const beltlineMap = getRandomSegment();
-  const beltlineRestaurants = getRandomRestaurants(restaurantCount, segmentId || beltlineMap?.id);
 
+  // Restaurants (async now)
+  const beltlineRestaurants = await getRandomRestaurants(
+    restaurantCount,
+    segmentId || beltlineMap?.id
+  );
+
+  // Rink events (these are still local JSON, so sync is fine)
   const localEventsRaw = getLocalRinkEvents();
   const { adultNights, familyKids, major } = splitLocalByType(localEventsRaw);
 
