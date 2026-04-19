@@ -57,14 +57,39 @@ body {
   letter-spacing: 0.04em;
 }
 
-/* PUBLISH BOX */
-.publish-box {
+/* TOP BUTTONS */
+.top-buttons {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 1rem;
 }
 
+/* GENERATE BUTTON (UPGRADED) */
+.btn-generate {
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  padding: 0.55rem 1.1rem;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  color: #0b0e17;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+  transition: 0.15s ease-in-out;
+}
+
+.btn-generate:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.btn-generate:active {
+  transform: translateY(0);
+  filter: brightness(0.95);
+}
+
+/* PUBLISH BUTTON */
 .btn-publish {
   border-radius: 999px;
   border: none;
@@ -79,12 +104,6 @@ body {
 
 .btn-publish:hover {
   filter: brightness(1.05);
-}
-
-.note {
-  margin: 0;
-  font-size: 0.8rem;
-  color: var(--muted);
 }
 
 /* FIELDS */
@@ -157,7 +176,7 @@ body {
   overflow: hidden;
 }
 
-/* HEADER ROW (logo left, date right) */
+/* HEADER ROW */
 .bw-header-row {
   display: flex;
   justify-content: space-between;
@@ -175,7 +194,7 @@ body {
   color: #5b4630;
 }
 
-/* CENTERED RIBBON */
+/* RIBBON */
 .bw-ribbon {
   margin: 1rem auto 1.25rem auto;
   display: inline-block;
@@ -227,10 +246,6 @@ body {
   font-size: 0.95rem;
   line-height: 1.6;
   margin: 0.4rem 0;
-}
-
-.bw-paragraph.indent {
-  text-indent: 1.5em;
 }
 
 .bw-section {
