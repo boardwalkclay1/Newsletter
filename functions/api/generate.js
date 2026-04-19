@@ -1,43 +1,96 @@
 export async function onRequestPost(context) {
   try {
-    // ===============================
-    // AUTO-GENERATED NEWSLETTER DATA
-    // (Replace with your real scrapers later)
-    // ===============================
+    // Helper to load JSON from /public/data/scraped/
+    async function load(name) {
+      const url = `${context.request.origin}/data/scraped/${name}.json`;
+      const res = await fetch(url);
+      return res.ok ? res.json() : [];
+    }
 
-    const now = new Date();
+    // Load scraped data
+    const beltline = await load("beltline-news");
+    const skateGlobal = await load("skate-news-global");
+    const skateLocal = await load("skate-news-local");
+    const skateNational = await load("skate-news-national");
 
+    // Disciplines (you will add more scrapers later)
+    const disciplines = {
+      longboard: skateGlobal,
+      rollerskate: skateLocal,
+      inline: skateNational,
+      bmx: skateGlobal,
+      surf: skateNational,
+      snowboard: skateLocal
+    };
+
+    // Pick 3 random disciplines
+    const keys = Object.keys(disciplines);
+    const selected = keys.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+    const disciplineSections = selected.map(key => {
+      const items = disciplines[key] || [];
+      const top = items[0] || {
+        title: `No ${key} news available`,
+        snippet: "",
+        url: ""
+      };
+
+      return {
+        title: key.toUpperCase(),
+        body: `${top.title}\n\n${top.snippet}`,
+        link: top.url
+      };
+    });
+
+    // Build newsletter
     const newsletter = {
-      dateTime: now.toLocaleString("en-US", { timeZone: "America/New_York" }),
-      title: `Boardwalk Newsletter – ${now.toLocaleDateString()}`,
+      dateTime: new Date().toLocaleString("en-US", { timeZone: "America/New_York" }),
+      title: "Boardwalk Newsletter – Auto Generated",
 
       paragraphs: [
-        "This is an automatically generated newsletter paragraph. Replace this with real scraped content.",
-        "This is the second auto-generated paragraph. Replace this with real data."
+        beltline[0]?.snippet || "No BeltLine updates available.",
+        skateGlobal[0]?.snippet || "No global skate news available."
       ],
 
       sections: [
-        { title: "Market Update", body: "Auto-generated market summary goes here." },
-        { title: "Top Headlines", body: "Auto-generated headlines go here." },
-        { title: "Sports", body: "Auto-generated sports summary goes here." },
-        { title: "Weather", body: "Auto-generated weather summary goes here." }
+        {
+          title: "BeltLine News",
+          body: beltline[0]?.title || "No BeltLine news available."
+        },
+        {
+          title: "Skate Global",
+          body: skateGlobal[0]?.title || "No global skate news available."
+        },
+        {
+          title: "Skate National",
+          body: skateNational[0]?.title || "No national skate news available."
+        },
+        {
+          title: "Skate Local",
+          body: skateLocal[0]?.title || "No local skate news available."
+        },
+        ...disciplineSections.map(s => ({
+          title: s.title,
+          body: s.body
+        }))
       ],
 
       links: [
-        { label: "Boardwalk Clay", url: "https://boardwalkclay.com" }
+        ...(beltline[0]?.url ? [{ label: "BeltLine Source", url: beltline[0].url }] : []),
+        ...(skateGlobal[0]?.url ? [{ label: "Global Skate Source", url: skateGlobal[0].url }] : []),
+        ...(skateNational[0]?.url ? [{ label: "National Skate Source", url: skateNational[0].url }] : []),
+        ...(skateLocal[0]?.url ? [{ label: "Local Skate Source", url: skateLocal[0].url }] : [])
       ],
 
-      qrCodes: [
-        { label: "Portal", url: "https://boardwalk-news.pages.dev/" }
-      ],
+      qrCodes: [],
 
       ending: "Stay sharp. Stay moving. – Boardwalk Clay",
 
       video: {
-        type: "embed",
-        url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        type: "none",
+        url: "",
         placement: "bottom",
-        caption: "Daily Motivation"
+        caption: ""
       },
 
       fontFamily: "Inter",
@@ -48,15 +101,12 @@ export async function onRequestPost(context) {
       showSignature: true
     };
 
-    // ===============================
-    // RETURN JSON (REQUIRED)
-    // ===============================
     return Response.json({ newsletter });
 
   } catch (err) {
-    return new Response(
-      JSON.stringify({ error: true, message: err.message }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" }
+    });
   }
 }
