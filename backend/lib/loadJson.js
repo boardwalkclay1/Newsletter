@@ -1,9 +1,12 @@
-import fs from 'node:fs';
-import path from 'node:path';
+import fs from "fs";
 
-export function loadJson(relPath, fallback = []) {
-  const full = path.join(process.cwd(), relPath);
-  if (!fs.existsSync(full)) return fallback;
-  const raw = fs.readFileSync(full, 'utf8');
-  return raw.trim() ? JSON.parse(raw) : fallback;
+export function loadJson(path, fallback = []) {
+  try {
+    if (!fs.existsSync(path)) return fallback;
+    const raw = fs.readFileSync(path, "utf8");
+    return JSON.parse(raw);
+  } catch (err) {
+    console.error("loadJson error:", err);
+    return fallback;
+  }
 }
