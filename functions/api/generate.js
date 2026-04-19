@@ -1,10 +1,16 @@
 export async function onRequestPost(context) {
   try {
-    // Helper to load JSON from /public/data/scraped/
+    // Load JSON from /public/data/scraped using Cloudflare's asset loader
     async function load(name) {
-      const url = `${context.request.origin}/data/scraped/${name}.json`;
-      const res = await fetch(url);
-      return res.ok ? res.json() : [];
+      const path = `/data/scraped/${name}.json`;
+      const res = await context.env.ASSETS.fetch(path);
+
+      if (!res || !res.ok) return [];
+      try {
+        return await res.json();
+      } catch {
+        return [];
+      }
     }
 
     // Load scraped data
@@ -13,7 +19,7 @@ export async function onRequestPost(context) {
     const skateLocal = await load("skate-news-local");
     const skateNational = await load("skate-news-national");
 
-    // Disciplines (you will add more scrapers later)
+    // Disciplines
     const disciplines = {
       longboard: skateGlobal,
       rollerskate: skateLocal,
