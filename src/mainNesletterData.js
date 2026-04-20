@@ -17,21 +17,21 @@ export async function buildNewsletterData(options = {}) {
     manualContent = {}
   } = options;
 
-  // BeltLine map segment
+  // BeltLine map segment (sync)
   const beltlineMap = getRandomSegment();
 
-  // Restaurants (async now)
+  // Restaurants (async)
   const beltlineRestaurants = await getRandomRestaurants(
     restaurantCount,
     segmentId || beltlineMap?.id
   );
 
-  // Rink events (these are still local JSON, so sync is fine)
-  const localEventsRaw = getLocalRinkEvents();
+  // Rink events (async now)
+  const localEventsRaw = await getLocalRinkEvents();
   const { adultNights, familyKids, major } = splitLocalByType(localEventsRaw);
 
-  const rinkEventsNational = getNationalRinkEvents();
-  const rinkEventsGlobal = getGlobalRinkEvents();
+  const rinkEventsNational = await getNationalRinkEvents();
+  const rinkEventsGlobal = await getGlobalRinkEvents();
 
   return {
     title: manualContent.title || 'Boardwalk Newsletter',
