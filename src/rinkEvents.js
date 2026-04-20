@@ -1,28 +1,34 @@
-import fs from 'node:fs';
-import path from 'node:path';
+// src/rinkEvents.js
 
-function loadJson(file) {
-  const p = path.join(process.cwd(), 'data', file);
-  const raw = fs.readFileSync(p, 'utf8');
-  return JSON.parse(raw);
+async function loadJson(file) {
+  const url = `${globalThis.location?.origin || ""}/data/${file}`;
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return [];
+    return await res.json();
+  } catch (err) {
+    console.error("Failed to load rink events:", file, err);
+    return [];
+  }
 }
 
-export function getLocalRinkEvents() {
-  return loadJson('rink-events-local.json');
+export async function getLocalRinkEvents() {
+  return await loadJson("rink-events-local.json");
 }
 
-export function getNationalRinkEvents() {
-  return loadJson('rink-events-national.json');
+export async function getNationalRinkEvents() {
+  return await loadJson("rink-events-national.json");
 }
 
-export function getGlobalRinkEvents() {
-  return loadJson('rink-events-global.json');
+export async function getGlobalRinkEvents() {
+  return await loadJson("rink-events-global.json");
 }
 
 export function splitLocalByType(events) {
   return {
-    adultNights: events.filter(e => e.type === 'adult-night'),
-    familyKids: events.filter(e => e.type === 'family-kids'),
-    major: events.filter(e => e.type === 'major-event')
+    adultNights: events.filter(e => e.type === "adult-night"),
+    familyKids: events.filter(e => e.type === "family-kids"),
+    major: events.filter(e => e.type === "major-event")
   };
 }
