@@ -1,0 +1,221 @@
+:root {
+  --accent: #f5c15c;
+  --text: #f5f2e9;
+  --muted: #c9c3b5;
+
+  --btn-bg: rgba(0,0,0,0.45);
+  --btn-hover: rgba(0,0,0,0.65);
+  --btn-border: rgba(255,255,255,0.18);
+  --btn-accent-border: #f5c15c;
+}
+
+/* RESET */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text);
+}
+
+/* HEADER */
+.bw-header {
+  padding: 2rem 1rem 1rem;
+  text-align: center;
+  backdrop-filter: blur(2px);
+}
+
+.bw-header h1 {
+  margin: 0;
+  font-size: 2.4rem;
+  font-weight: 700;
+}
+
+.bw-header p {
+  margin: 0.5rem 0 0;
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+/* NAVIGATION — BUBBLE BUTTONS */
+.bw-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 1.2rem 0 0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.bw-nav a {
+  display: inline-block;
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  background: var(--btn-bg);
+  border: 1px solid var(--btn-border);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.9rem;
+  backdrop-filter: blur(6px);
+  transition: 0.15s ease-in-out;
+}
+
+.bw-nav a:hover {
+  background: var(--btn-hover);
+  border-color: var(--btn-accent-border);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+/* MAIN */
+.bw-main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* NO MORE BLOCKS — TEXT ONLY */
+.bw-card {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0;
+  backdrop-filter: blur(2px);
+}
+
+.bw-card h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+/* LATEST ISSUE LINK — BUBBLE BUTTON */
+.bw-latest-link a {
+  display: inline-block;
+  padding: 0.55rem 1.2rem;
+  border-radius: 999px;
+  background: var(--btn-bg);
+  border: 1px solid var(--btn-border);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.9rem;
+  backdrop-filter: blur(6px);
+  transition: 0.15s ease-in-out;
+}
+
+.bw-latest-link a:hover {
+  background: var(--btn-hover);
+  border-color: var(--btn-accent-border);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+/* FORM ELEMENTS — TRANSPARENT */
+label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+
+input[type="email"],
+input[type="tel"],
+select {
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  margin-top: 0.25rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(0,0,0,0.35);
+  color: var(--text);
+  backdrop-filter: blur(4px);
+}
+
+fieldset {
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 6px;
+  padding: 0.75rem 0.9rem;
+  margin-bottom: 0.9rem;
+  background: rgba(0,0,0,0.25);
+  backdrop-filter: blur(4px);
+}
+
+legend {
+  padding: 0 0.25rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+/* SUBMIT BUTTON */
+button[type="submit"] {
+  margin-top: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--accent);
+  color: #20150a;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  filter: brightness(1.05);
+}
+
+/* PRIVACY LINK — BUBBLE BUTTON */
+.bw-legal a {
+  display: inline-block;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  background: var(--btn-bg);
+  border: 1px solid var(--btn-border);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.85rem;
+  backdrop-filter: blur(6px);
+  transition: 0.15s ease-in-out;
+}
+
+.bw-legal a:hover {
+  background: var(--btn-hover);
+  border-color: var(--btn-accent-border);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+/* FOOTER */
+.bw-footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* MOBILE */
+@media (max-width: 800px) {
+  .bw-nav ul {
+    gap: 0.4rem;
+  }
+
+  .bw-nav a {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .bw-latest-link a {
+    padding: 0.45rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .bw-legal a {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.8rem;
+  }
+}

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Verify Subscription</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+  <header class="bw-header">
+    <h1>Email Verification</h1>
+  </header>
+
+  <main class="bw-main">
+    <section class="bw-card">
+      <p id="verifyStatus" class="bw-status">Checking your token…</p>
+    </section>
+  </main>
+
+  <script type="module">
+    async function verify() {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get("token");
+      const status = document.getElementById("verifyStatus");
+
+      if (!token) {
+        status.textContent = "Invalid or missing verification token.";
+        status.className = "bw-status err";
+        return;
+      }
+
+      // Cloudflare Pages env vars
+      const owner = import.meta.env.GITHUB_OWNER;
+      const repo = import.meta.env.GITHUB_REPO;
+      const pat = import.meta.env.GITHUB_PAT;
+
+      try {
+        const res = await fetch(
+          `https://api.github.com/repos/${owner}/${repo}/dispatches`,
+          {
+            method: "POST",
+            headers: {
+              "Accept": "application/vnd.github+json",
+              "Authorization": `Bearer ${pat}`
+            },
+            body: JSON.stringify({
+              event_type: "verify_subscriber",
+              client_payload: { token }
+            })
+          }
+        );
+
+        if (!res.ok) {
+          status.textContent = "Verification failed. Please try again later.";
+          status.className = "bw-status err";
+          return;
+        }
+
+        status.textContent = "Your email has been verified!";
+        status.className = "bw-status ok";
+
+      } catch (err) {
+        console.error("Verification error:", err);
+        status.textContent = "Verification failed. Please try again later.";
+        status.className = "bw-status err";
+      }
+    }
+
+    verify();
+  </script>
+</body>
+</html>
