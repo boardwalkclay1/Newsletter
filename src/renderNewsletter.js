@@ -1,3 +1,5 @@
+// src/renderNewsletter.js
+
 export function renderNewsletter(state) {
   // PAPER BACKGROUND (supports full URLs)
   const paperBackground = state.paperStyle
