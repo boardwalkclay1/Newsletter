@@ -1,18 +1,15 @@
 // src/renderNewsletter.js
 
 export function renderNewsletter(state) {
-  // PAPER BACKGROUND (supports full URLs)
   const paperBackground = state.paperStyle
     ? `url('${state.paperStyle}')`
     : state.textBgColor;
 
-  // VIDEO BLOCK
   function buildVideo() {
     if (!state.video || state.video.type === "none" || !state.video.url) return "";
 
     let src = state.video.url.trim();
 
-    // Convert YouTube watch → embed
     if (src.includes("youtube.com/watch")) {
       const id = new URL(src).searchParams.get("v");
       if (id) src = `https://www.youtube.com/embed/${id}`;
@@ -26,39 +23,44 @@ export function renderNewsletter(state) {
     `;
   }
 
-  // LINKS
-  const linksHtml = state.links?.length
-    ? `
-      <section class="bw-links">
-        <h3>Links & Portals</h3>
+  function buildScrapedSection(title, items) {
+    if (!items || !items.length) return "";
+    return `
+      <section class="bw-section">
+        <h2>${title}</h2>
         <ul>
-          ${state.links
-            .filter(l => l.url)
-            .map(l => `<li><a href="${l.url}" target="_blank">${l.label || l.url}</a></li>`)
+          ${items
+            .map(
+              i => `
+            <li>
+              <a href="${i.url}" target="_blank">${i.title}</a>
+              ${i.source ? `<span class="bw-source">(${i.source})</span>` : ""}
+            </li>`
+            )
             .join("")}
         </ul>
       </section>
-    `
-    : "";
+    `;
+  }
 
-  // QR CODES
-  const qrHtml = state.qrCodes?.length
-    ? `
-      <section class="bw-links">
-        <h3>QR Codes</h3>
-        <ul>
-          ${state.qrCodes
-            .filter(q => q.url)
-            .map(q => `<li>${q.label || ""} – ${q.url}</li>`)
-            .join("")}
-        </ul>
-      </section>
-    `
-    : "";
+  const scrapedHtml = `
+    ${buildScrapedSection("Local Skate News", state.skateLocal)}
+    ${buildScrapedSection("National Skate News", state.skateNational)}
+    ${buildScrapedSection("Global Skate News", state.skateGlobal)}
+    ${buildScrapedSection("BMX News", state.bmx)}
+    ${buildScrapedSection("Inline Skating News", state.inline)}
+    ${buildScrapedSection("Roller Skating News", state.roller)}
+    ${buildScrapedSection("Surf News", state.surf)}
+    ${buildScrapedSection("Snow News", state.snow)}
+    ${buildScrapedSection("Longboard News", state.longboard)}
+    ${buildScrapedSection("BeltLine News", state.beltline)}
+  `;
 
-  // SECTIONS
-  const sectionsHtml = state.sections
-    ?.filter(s => s.title || s.body)
+  const paragraphsHtml = (state.paragraphs || [])
+    .map(p => `<p class="bw-paragraph">${p}</p>`)
+    .join("");
+
+  const sectionsHtml = (state.sections || [])
     .map(
       s => `
       <section class="bw-section">
@@ -67,39 +69,56 @@ export function renderNewsletter(state) {
       </section>
     `
     )
-    .join("") || "";
+    .join("");
 
-  // PARAGRAPHS
-  const paragraphsHtml = state.paragraphs
-    ?.filter(p => p.trim())
-    .map(p => `<p class="bw-paragraph">${p}</p>`)
-    .join("") || "";
+  const linksHtml = (state.links || []).length
+    ? `
+      <section class="bw-section">
+        <h2>Links</h2>
+        <ul>
+          ${state.links
+            .map(l => `<li><a href="${l.url}" target="_blank">${l.label || l.url}</a></li>`)
+            .join("")}
+        </ul>
+      </section>
+    `
+    : "";
 
-  // VIDEO PLACEMENT
+  const qrHtml = (state.qrCodes || []).length
+    ? `
+      <section class="bw-section">
+        <h2>QR Codes</h2>
+        <ul>
+          ${state.qrCodes
+            .map(q => `<li>${q.label || ""} – ${q.url}</li>`)
+            .join("")}
+        </ul>
+      </section>
+    `
+    : "";
+
   const videoTop = state.video?.placement === "top" ? buildVideo() : "";
   const videoBottom = state.video?.placement === "bottom" ? buildVideo() : "";
 
-  // SIGNATURE
   const signatureHtml = state.showSignature
     ? `<div class="bw-signature">Boardwalk Clay</div>`
     : "";
 
-  // LOGO
   const logoHtml = state.showLogo
     ? `<img src="/assets/logo-boardwalk.png" class="bw-logo">`
     : "";
 
-  // FINAL HTML
   return `
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>${state.title || "Boardwalk Newsletter"}</title>
+  <title>${state.title}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=${encodeURIComponent(state.fontFamily)}&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=${encodeURIComponent(
+    state.fontFamily
+  )}&display=swap" rel="stylesheet">
 
   <style>
     body {
@@ -117,9 +136,10 @@ export function renderNewsletter(state) {
     .bw-paragraph { margin: 1rem 0; line-height: 1.6; }
     .bw-section { margin: 2rem 0; }
     .bw-section h2 { margin-bottom: 0.5rem; }
-    .bw-links ul { padding-left: 1.2rem; }
+    .bw-section ul { padding-left: 1.2rem; }
     .bw-video iframe { width: 100%; height: 315px; border: none; }
     .bw-signature { margin-top: 3rem; font-size: 1.4rem; text-align: right; }
+    .bw-source { color: #777; font-size: 0.9rem; margin-left: 4px; }
   </style>
 </head>
 
@@ -133,6 +153,9 @@ export function renderNewsletter(state) {
   ${videoTop}
   ${paragraphsHtml}
   ${sectionsHtml}
+
+  ${scrapedHtml}
+
   ${linksHtml}
   ${qrHtml}
 
