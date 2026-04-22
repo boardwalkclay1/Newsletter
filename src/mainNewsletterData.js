@@ -1,61 +1,53 @@
 // src/mainNewsletterData.js
 
-import {
-  getLocalRinkEvents,
-  getNationalRinkEvents,
-  getGlobalRinkEvents,
-  splitLocalByType
-} from './rinkEvents.js';
-
-import { getRandomSegment } from './beltlineMap.js';
-import { getRandomRestaurants } from './beltlineRestaurants.js';
+import { loadJson } from "../backend/lib/loadJson.js";
 
 export async function buildNewsletterData(options = {}) {
-  const {
-    segmentId = null,
-    restaurantCount = 3,
-    manualContent = {}
-  } = options;
+  const { manualContent = {} } = options;
 
-  // BeltLine map segment (sync)
-  const beltlineMap = getRandomSegment();
-
-  // Restaurants (async)
-  const beltlineRestaurants = await getRandomRestaurants(
-    restaurantCount,
-    segmentId || beltlineMap?.id
-  );
-
-  // Rink events (async now)
-  const localEventsRaw = await getLocalRinkEvents();
-  const { adultNights, familyKids, major } = splitLocalByType(localEventsRaw);
-
-  const rinkEventsNational = await getNationalRinkEvents();
-  const rinkEventsGlobal = await getGlobalRinkEvents();
+  // Load aggregated scraped data
+  const scraped = loadJson("public/data/newsletter-source.json", {
+    skateLocal: [],
+    skateGlobal: [],
+    skateNational: [],
+    bmx: [],
+    inline: [],
+    roller: [],
+    surf: [],
+    snow: [],
+    longboard: [],
+    beltline: []
+  });
 
   return {
-    title: manualContent.title || 'Boardwalk Newsletter',
+    // Manual content
+    title: manualContent.title || "Boardwalk Newsletter",
     dateTime: manualContent.dateTime || new Date().toLocaleString(),
     paragraphs: manualContent.paragraphs || [],
     sections: manualContent.sections || [],
-    ending: manualContent.ending || '',
+    ending: manualContent.ending || "",
     links: manualContent.links || [],
     qrCodes: manualContent.qrCodes || [],
-    video: manualContent.video || { type: 'none' },
+    video: manualContent.video || { type: "none" },
 
-    beltlineMap,
-    beltlineRestaurants,
+    // Scraped content
+    skateLocal: scraped.skateLocal,
+    skateGlobal: scraped.skateGlobal,
+    skateNational: scraped.skateNational,
+    bmx: scraped.bmx,
+    inline: scraped.inline,
+    roller: scraped.roller,
+    surf: scraped.surf,
+    snow: scraped.snow,
+    longboard: scraped.longboard,
+    beltline: scraped.beltline,
 
-    rinkEventsLocalAdult: adultNights,
-    rinkEventsLocalFamily: familyKids,
-    rinkEventsLocalMajor: major,
-    rinkEventsNational,
-    rinkEventsGlobal,
-
-    theme: manualContent.theme || 'old-scroll',
-    fontStyle: manualContent.fontStyle || 'old-english',
-    textColor: manualContent.textColor || '#2b1b0f',
-    textBgColor: manualContent.textBgColor || '#fdf5e6',
+    // Style
+    theme: manualContent.theme || "old-scroll",
+    fontFamily: manualContent.fontFamily || "Old Standard TT",
+    textColor: manualContent.textColor || "#2b1b0f",
+    textBgColor: manualContent.textBgColor || "#fdf5e6",
+    paperStyle: manualContent.paperStyle || "",
     showLogo: manualContent.showLogo ?? true,
     showSignature: manualContent.showSignature ?? true
   };
