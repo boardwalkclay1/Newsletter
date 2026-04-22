@@ -1,88 +1,50 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import { buildNewsletterData } from '../src/mainNewsletterData.js';
-import { renderNewsletter } from '../src/renderNewsletter.js';
-import { saveJson } from '../backend/lib/saveJson.js';
-import { loadJson } from '../backend/lib/loadJson.js';
+// scripts/build-newsletter.js
+
+import fs from "fs";
+import path from "path";
+import { buildNewsletterData } from "../src/mainNewsletterData.js";
+import { renderNewsletter } from "../src/renderNewsletter.js";
+import { saveJson } from "../backend/lib/saveJson.js";
 
 async function main() {
-  const dashboardJsonPath = 'data/dashboard-newsletter.json';
-  let state;
+  console.log("Building newsletter...");
 
-  // ============================================================
-  // 1. USE DASHBOARD PAYLOAD IF IT EXISTS
-  // ============================================================
-  if (fs.existsSync(dashboardJsonPath)) {
+  // Load manual content if dashboard provided it
+  const dashboardPath = "public/data/dashboard-newsletter.json";
+  let manualContent = {};
+
+  if (fs.existsSync(dashboardPath)) {
     try {
-      const raw = fs.readFileSync(dashboardJsonPath, 'utf8');
-      state = JSON.parse(raw);
-      console.log('Using dashboard newsletter JSON');
+      manualContent = JSON.parse(fs.readFileSync(dashboardPath, "utf8"));
+      console.log("Using dashboard manual content");
     } catch (err) {
-      console.error('Failed to parse dashboard JSON, falling back:', err);
-      state = await buildNewsletterData({});
+      console.error("Failed to parse dashboard content:", err);
     }
-  } else {
-    // ============================================================
-    // 2. FALLBACK: AUTO‑BUILD NEWSLETTER
-    // ============================================================
-    console.log('No dashboard JSON found — using auto-build');
-    state = await buildNewsletterData({});
   }
 
-  // ============================================================
-  // 3. RENDER HTML
-  // ============================================================
-  const html = renderNewsletter(state);
+  // Build data + HTML
+  const data = await buildNewsletterData({ manualContent });
+  const html = renderNewsletter(data);
 
-  // ============================================================
-  // 4. ISSUE ID
-  // ============================================================
-  const now = new Date();
-  const id = now.getTime();
+  // Issue ID
+  const id = Date.now().toString();
+  const issueDir = path.join("public/data/issues", id);
+  fs.mkdirSync(issueDir, { recursive: true });
 
-  // ============================================================
-  // 5. WRITE HTML FILE
-  // ============================================================
-  const issuesDir = path.join(process.cwd(), 'public', 'issues');
-  if (!fs.existsSync(issuesDir)) fs.mkdirSync(issuesDir, { recursive: true });
+  // Save JSON + HTML
+  saveJson(path.join(issueDir, "issue.json"), data);
+  fs.writeFileSync(path.join(issueDir, "issue.html"), html, "utf8");
 
-  const htmlPath = path.join(issuesDir, `issue-${id}.html`);
-  fs.writeFileSync(htmlPath, html, 'utf8');
+  // Update latest
+  saveJson("public/data/issues/latest.json", data);
+  fs.writeFileSync("public/data/issues/latest.html", html, "utf8");
 
-  console.log('Generated issue HTML:', htmlPath);
-
-  // ============================================================
-  // 6. UPDATE INDEX.JSON
-  // ============================================================
-  const indexPath = 'data/issues/index.json';
-  const index = loadJson(indexPath, []);
-
-  const meta = {
-    id,
-    title: state.title || `Boardwalk Newsletter – ${id}`,
-    summary: state.summary || '',
-    createdAt: now.toISOString(),
-    path: `/issues/issue-${id}.html`
-  };
-
-  const updatedIndex = [...index, meta];
-  saveJson(indexPath, updatedIndex);
-
-  console.log('Updated issue index');
-
-  // ============================================================
-  // 7. CLEAN UP DASHBOARD JSON
-  // ============================================================
-  try {
-    if (fs.existsSync(dashboardJsonPath)) {
-      fs.unlinkSync(dashboardJsonPath);
-      console.log('Cleared dashboard JSON');
-    }
-  } catch (err) {
-    console.warn('Could not delete dashboard JSON:', err);
+  // Cleanup dashboard file
+  if (fs.existsSync(dashboardPath)) {
+    fs.unlinkSync(dashboardPath);
   }
 
-  console.log('Built issue', id);
+  console.log("Newsletter built:", id);
 }
 
 main().catch(err => {
