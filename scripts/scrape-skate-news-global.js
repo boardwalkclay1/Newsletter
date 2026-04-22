@@ -1,118 +1,145 @@
 import fetch from "node-fetch";
 import cheerio from "cheerio";
-import { loadJson } from "../backend/lib/loadJson.js";
 import { saveJson } from "../backend/lib/saveJson.js";
 
 const OUT = "public/data/scraped/skate-news-global.json";
+const UA = { headers: { "User-Agent": "Mozilla/5.0" } };
 
 async function scrapeSkateNewsWire() {
-  const url = "https://skatenewswire.com/";
-  const html = await (await fetch(url)).text();
-  const $ = cheerio.load(html);
-  const items = [];
+  try {
+    const html = await (await fetch("https://skatenewswire.com/", UA)).text();
+    const $ = cheerio.load(html);
+    const items = [];
 
-  $(".jeg_post").each((i, el) => {
-    const title = $(el).find(".jeg_post_title a").text().trim();
-    const link = $(el).find(".jeg_post_title a").attr("href");
-    const snippet = $(el).find(".jeg_post_excerpt").text().trim();
-    const date = $(el).find("time").attr("datetime") || "";
+    $(".jeg_post").each((i, el) => {
+      const title = $(el).find(".jeg_post_title a").text().trim();
+      const link = $(el).find(".jeg_post_title a").attr("href") || "";
+      const snippet = $(el).find(".jeg_post_excerpt").text().trim();
+      const date = $(el).find("time").attr("datetime") || "";
 
-    if (title && link) {
-      items.push({ title, url: link, source: "SkateNewsWire", snippet, date });
-    }
-  });
+      if (title && link) {
+        items.push({
+          title,
+          url: link,
+          source: "SkateNewsWire",
+          snippet,
+          date
+        });
+      }
+    });
 
-  return items;
+    return items;
+  } catch {
+    return [];
+  }
 }
 
 async function scrapeBeMag() {
-  const url = "https://be-mag.com/";
-  const html = await (await fetch(url)).text();
-  const $ = cheerio.load(html);
-  const items = [];
+  try {
+    const html = await (await fetch("https://be-mag.com/", UA)).text();
+    const $ = cheerio.load(html);
+    const items = [];
 
-  $("article").each((i, el) => {
-    const title = $(el).find("h2 a").text().trim();
-    const link = $(el).find("h2 a").attr("href");
-    const snippet = $(el).find("p").first().text().trim();
-    const date = $(el).find("time").attr("datetime") || "";
+    $("article").each((i, el) => {
+      const title = $(el).find("h2 a").text().trim();
+      const link = $(el).find("h2 a").attr("href") || "";
+      const snippet = $(el).find("p").first().text().trim();
+      const date = $(el).find("time").attr("datetime") || "";
 
-    if (title && link) {
-      items.push({ title, url: link, source: "Be-Mag", snippet, date });
-    }
-  });
+      if (title && link) {
+        items.push({
+          title,
+          url: link.startsWith("http") ? link : `https://be-mag.com${link}`,
+          source: "Be-Mag",
+          snippet,
+          date
+        });
+      }
+    });
 
-  return items;
+    return items;
+  } catch {
+    return [];
+  }
 }
 
 async function scrapeJenkem() {
-  const url = "https://www.jenkemmag.com/home/";
-  const html = await (await fetch(url)).text();
-  const $ = cheerio.load(html);
-  const items = [];
+  try {
+    const html = await (await fetch("https://www.jenkemmag.com/home/", UA)).text();
+    const $ = cheerio.load(html);
+    const items = [];
 
-  $("article").each((i, el) => {
-    const title = $(el).find("h2 a").text().trim();
-    const link = $(el).find("h2 a").attr("href");
-    const snippet = $(el).find("p").first().text().trim();
-    const date = $(el).find("time").attr("datetime") || "";
+    $("article").each((i, el) => {
+      const title = $(el).find("h2 a").text().trim();
+      const link = $(el).find("h2 a").attr("href") || "";
+      const snippet = $(el).find("p").first().text().trim();
+      const date = $(el).find("time").attr("datetime") || "";
 
-    if (title && link) {
-      items.push({ title, url: link, source: "Jenkem", snippet, date });
-    }
-  });
+      if (title && link) {
+        items.push({
+          title,
+          url: link,
+          source: "Jenkem",
+          snippet,
+          date
+        });
+      }
+    });
 
-  return items;
+    return items;
+  } catch {
+    return [];
+  }
 }
 
 async function scrapeThrasher() {
-  const url = "https://www.thrashermagazine.com/articles/";
-  const html = await (await fetch(url)).text();
-  const $ = cheerio.load(html);
-  const items = [];
+  try {
+    const html = await (await fetch("https://www.thrashermagazine.com/articles/", UA)).text();
+    const $ = cheerio.load(html);
+    const items = [];
 
-  $("article").each((i, el) => {
-    const title = $(el).find("h2 a").text().trim();
-    const link = $(el).find("h2 a").attr("href");
-    const snippet = $(el).find("p").first().text().trim();
-    const date = $(el).find("time").attr("datetime") || "";
+    $("article").each((i, el) => {
+      const title = $(el).find("h2 a").text().trim();
+      const link = $(el).find("h2 a").attr("href") || "";
+      const snippet = $(el).find("p").first().text().trim();
+      const date = $(el).find("time").attr("datetime") || "";
 
-    if (title && link) {
-      items.push({
-        title,
-        url: link.startsWith("http") ? link : `https://www.thrashermagazine.com${link}`,
-        source: "Thrasher",
-        snippet,
-        date
-      });
-    }
-  });
+      if (title && link) {
+        items.push({
+          title,
+          url: link.startsWith("http") ? link : `https://www.thrashermagazine.com${link}`,
+          source: "Thrasher",
+          snippet,
+          date
+        });
+      }
+    });
 
-  return items;
+    return items;
+  } catch {
+    return [];
+  }
 }
 
 async function scrapeReddit() {
-  const url = "https://www.reddit.com/r/skateboarding/new.json?limit=20";
-  const json = await (await fetch(url)).json();
-  const items = [];
-
-  json.data.children.forEach(post => {
-    const p = post.data;
-    items.push({
-      title: p.title,
-      url: `https://reddit.com${p.permalink}`,
-      source: "Reddit r/skateboarding",
-      snippet: p.selftext?.slice(0, 200) || "",
-      date: new Date(p.created_utc * 1000).toISOString()
+  try {
+    const json = await (await fetch("https://www.reddit.com/r/skateboarding/new.json?limit=20", UA)).json();
+    return json.data.children.map(post => {
+      const p = post.data;
+      return {
+        title: p.title,
+        url: `https://reddit.com${p.permalink}`,
+        source: "Reddit r/skateboarding",
+        snippet: p.selftext?.slice(0, 200) || "",
+        date: new Date(p.created_utc * 1000).toISOString()
+      };
     });
-  });
-
-  return items;
+  } catch {
+    return [];
+  }
 }
 
 async function main() {
-  const existing = loadJson(OUT, []);
-
   const all = [
     ...(await scrapeSkateNewsWire()),
     ...(await scrapeBeMag()),
@@ -122,7 +149,9 @@ async function main() {
   ];
 
   const deduped = all.filter(
-    (v, i, a) => a.findIndex(t => t.title === v.title) === i
+    (v, i, a) =>
+      a.findIndex(t => t.url === v.url) === i &&
+      a.findIndex(t => t.title === v.title) === i
   );
 
   saveJson(OUT, deduped);
