@@ -25,30 +25,24 @@ jobs:
       # SAVE DASHBOARD PAYLOAD (IF PROVIDED)
       # ============================================================
       - name: Save dashboard newsletter payload
-        if: ${{ github.event.client_payload.newsletter }}
+        if: ${{ github.event.client_payload }}
         run: |
-          echo '${{ toJson(github.event.client_payload.newsletter) }}' > data/dashboard-newsletter.json
+          echo '${{ toJson(github.event.client_payload) }}' > public/data/dashboard-newsletter.json
           echo "Dashboard newsletter JSON saved."
 
       # ============================================================
-      # BUILD NEWSLETTER
+      # BUILD NEWSLETTER (NEW PIPELINE)
       # ============================================================
       - name: Build newsletter
         run: node scripts/build-newsletter.js
 
-      - name: Generate issue index
-        run: node scripts/generate-issue-index.js
-
-      - name: Register delivery job
-        run: node scripts/register-delivery-job.js
-
       # ============================================================
       # COMMIT CHANGES
       # ============================================================
-      - name: Commit issues and index
+      - name: Commit issues and latest
         run: |
           git config user.name "boardwalk-bot"
           git config user.email "bot@example.com"
-          git add public/issues/ data/issues/index.json data/dashboard-newsletter.json data/delivery/
+          git add public/data/issues/
           git commit -m "Add newsletter issue" || echo "No changes"
           git push
