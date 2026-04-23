@@ -233,38 +233,19 @@ $("addQrBtn").addEventListener("click", () => {
 });
 
 // ===============================
-// GENERATE BUTTON (REAL GENERATOR)
+// GENERATE BUTTON (GITHUB DISPATCH)
 // ===============================
 $("generateBtn").addEventListener("click", async () => {
-  const res = await fetch("/api/generate", {
+  await fetch("/api/dispatch", {
     method: "POST",
-    headers: { "Content-Type": "application/json" }
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      action: "build_newsletter",
+      payload: state
+    })
   });
 
-  const data = await res.json();
-  const n = data.newsletter;
-
-  Object.assign(state, n);
-
-  $("dateTime").value = n.dateTime;
-  $("title").value = n.title;
-  $("p1").value = n.paragraphs[0] || "";
-  $("p2").value = n.paragraphs[1] || "";
-  $("ending").value = n.ending || "";
-
-  $("videoType").value = n.video.type;
-  $("videoUrl").value = n.video.url;
-  $("videoPlacement").value = n.video.placement;
-  $("videoCaption").value = n.video.caption;
-
-  $("fontFamily").value = n.fontFamily;
-  $("paperStyle").value = n.paperStyle;
-  $("textColor").value = n.textColor;
-  $("textBgColor").value = n.textBgColor;
-  $("showLogo").checked = n.showLogo;
-  $("showSignature").checked = n.showSignature;
-
-  renderPreview();
+  alert("Newsletter generation triggered.");
 });
 
 // ===============================
