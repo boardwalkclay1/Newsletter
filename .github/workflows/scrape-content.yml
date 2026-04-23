@@ -2,30 +2,68 @@ name: Scrape Content
 
 on:
   schedule:
-    - cron: "0 6 */2 * *"
+    - cron: "0 6 */2 * *"   # every 2 days at 6 AM UTC
   workflow_dispatch:
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+
       - run: npm ci
+
+      # ============================
+      # RUN ALL SCRAPERS
+      # ============================
       - name: Scrape BeltLine news
         run: node scripts/scrape-beltline-news.js
-      - name: Scrape skating news
-        run: node scripts/scrape-skate-news.js
-      - name: Scrape national/global news
-        run: |
-          node scripts/scrape-national-news.js
-          node scripts/scrape-global-news.js
+
+      - name: Scrape Skate Global
+        run: node scripts/scrape-skate-news-global.js
+
+      - name: Scrape Skate Local
+        run: node scripts/scrape-skate-news-local.js
+
+      - name: Scrape Skate National
+        run: node scripts/scrape-skate-news-national.js
+
+      - name: Scrape BMX
+        run: node scripts/scrape-bmx-news.js
+
+      - name: Scrape Inline
+        run: node scripts/scrape-inline-news.js
+
+      - name: Scrape Longboard
+        run: node scripts/scrape-longboard-news.js
+
+      - name: Scrape Roller
+        run: node scripts/scrape-roller-news.js
+
+      - name: Scrape Snow
+        run: node scripts/scrape-snow-news.js
+
+      - name: Scrape Surf
+        run: node scripts/scrape-surf-news.js
+
+      # ============================
+      # AGGREGATE SCRAPED DATA
+      # ============================
+      - name: Aggregate scraped data
+        run: node scripts/aggregate-news.js
+
+      # ============================
+      # COMMIT SCRAPED + AGGREGATED DATA
+      # ============================
       - name: Commit scraped data
         run: |
           git config user.name "boardwalk-bot"
           git config user.email "bot@example.com"
-          git add data/scraped/
+          git add public/data/scraped/ public/data/newsletter-source.json
           git commit -m "Update scraped content" || echo "No changes"
           git push
