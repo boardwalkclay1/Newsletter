@@ -39,6 +39,7 @@ jobs:
             node scripts/scrape-roller-news.js
             node scripts/scrape-snow-news.js
             node scripts/scrape-surf-news.js
+            node scripts/aggregate-news.js
           fi
 
           # ============================
@@ -52,7 +53,7 @@ jobs:
           fi
 
           # ============================
-          # SEND DELIVERY (OPTIONAL)
+          # SEND DELIVERY
           # ============================
           if [ "$EVENT_TYPE" = "send_delivery" ]; then
             echo "Sending deliveries..."
@@ -64,7 +65,7 @@ jobs:
           git config user.name "boardwalk-bot"
           git config user.email "bot@example.com"
 
-          git add public/data/issues/ public/data/dashboard-newsletter.json
+          git add public/data/issues/ public/data/dashboard-newsletter.json public/data/newsletter-source.json public/data/scraped/
 
           git commit -m "Dashboard-triggered update via repo_dispatch" || echo "No changes"
           git push
