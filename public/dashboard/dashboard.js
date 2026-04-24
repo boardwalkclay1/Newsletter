@@ -26,6 +26,29 @@ let state = {
 const $ = id => document.getElementById(id);
 
 // ===============================
+// LOAD LATEST NEWSLETTER
+// ===============================
+async function loadLatestNewsletter() {
+  try {
+    const res = await fetch("/data/issues/latest.json", { cache: "no-store" });
+    if (!res.ok) {
+      console.warn("No latest newsletter found.");
+      return;
+    }
+
+    const data = await res.json();
+
+    // Merge loaded data into state
+    state = { ...state, ...data };
+
+    // Render preview with loaded content
+    renderPreview();
+  } catch (err) {
+    console.error("Error loading latest newsletter:", err);
+  }
+}
+
+// ===============================
 // LIVE BINDING HELPERS
 // ===============================
 function bindInput(id, setter) {
@@ -113,10 +136,13 @@ function renderPreview() {
     $("previewVideo").innerHTML = "";
   } else {
     let src = state.video.url.trim();
+
+    // Convert YouTube watch URL → embed
     if (src.includes("youtube.com/watch")) {
       const id = new URL(src).searchParams.get("v");
       if (id) src = `https://www.youtube.com/embed/${id}`;
     }
+
     $("previewVideo").innerHTML = `
       <div class="bw-video">
         <iframe src="${src}" allowfullscreen></iframe>
@@ -233,34 +259,29 @@ $("addQrBtn").addEventListener("click", () => {
 });
 
 // ===============================
-// GENERATE BUTTON (GITHUB DISPATCH)
+// DISPATCH HELPERS
 // ===============================
-$("generateBtn").addEventListener("click", async () => {
+async function sendDispatch(action) {
   await fetch("/api/dispatch", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      action: "build_newsletter",
-      payload: state
-    })
+    body: JSON.stringify({ action, payload: state })
   });
+}
 
+// ===============================
+// GENERATE BUTTON
+// ===============================
+$("generateBtn").addEventListener("click", async () => {
+  await sendDispatch("build_newsletter");
   alert("Newsletter generation triggered.");
 });
 
 // ===============================
-// PUBLISH BUTTON (GITHUB DISPATCH)
+// PUBLISH BUTTON
 // ===============================
 $("publishBtn").addEventListener("click", async () => {
-  await fetch("/api/dispatch", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      action: "build_newsletter",
-      payload: state
-    })
-  });
-
+  await sendDispatch("build_newsletter");
   alert("Newsletter published.");
 });
 
@@ -268,4 +289,5 @@ $("publishBtn").addEventListener("click", async () => {
 // INIT
 // ===============================
 initBindings();
+loadLatestNewsletter();
 renderPreview();
